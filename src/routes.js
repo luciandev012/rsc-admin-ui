@@ -18,6 +18,7 @@ import UnitsManagementPage from "views/unit-management/unit-management";
 import ImportManagementPage from "views/import-management/import";
 import ExportManagementPage from "views/export-management/export";
 import CustomerManagementPage from "views/customer-management/customer";
+import ManagerManagementPage from "views/manager-management/manager";
 
 const dashboardRoutes = [
   {
@@ -25,6 +26,13 @@ const dashboardRoutes = [
     name: "Employee Management",
     icon: AssignmentIndIcon,
     component: EmployeeManagementPage,
+    layout: "/manager",
+  },
+  {
+    path: "/manager-management",
+    name: "Manager Management",
+    icon: AssignmentIndIcon,
+    component: ManagerManagementPage,
     layout: "/manager",
   },
   {

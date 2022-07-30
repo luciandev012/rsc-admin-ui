@@ -88,6 +88,10 @@ export default function ImportManagementPage() {
   };
   // close dialog
   const handleClose = () => {
+    setImportNote({
+      price: "",
+      quantity: "",
+    });
     setOpen(false);
   };
   const dispatch = useDispatch();

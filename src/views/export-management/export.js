@@ -88,6 +88,11 @@ export default function ExportManagementPage() {
   };
   // close dialog
   const handleClose = () => {
+    setExportNote({
+      price: "",
+      quantity: "",
+      description: "",
+    });
     setOpen(false);
   };
   const dispatch = useDispatch();

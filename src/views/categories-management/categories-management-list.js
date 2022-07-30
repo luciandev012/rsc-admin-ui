@@ -72,6 +72,10 @@ export default function CategoriesManagementPage() {
 
   // close dialog
   const handleClose = () => {
+    setCate({
+      categoryName: "",
+      subCategories: "",
+    });
     setOpen(false);
   };
   const dispatch = useDispatch();

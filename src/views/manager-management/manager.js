@@ -26,17 +26,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllEmployee } from "actions/employee";
 import { Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Checkbox, FormControlLabel } from "@mui/material";
-import "./style.css";
-import { addEmployee } from "actions/employee";
+import { getManagers } from "actions/manager";
+import { addManager } from "actions/manager";
 
-export default function EmployeeManagementPage() {
+export default function ManagerManagementPage() {
   // validation
   const {
     handleSubmit,
@@ -56,8 +55,9 @@ export default function EmployeeManagementPage() {
     fd.append("cwtId", employ.cwtId);
     fd.append("personalId", employ.personalId);
     fd.append("gender", disabled);
-    dispatch(addEmployee(fd));
+    dispatch(addManager(fd));
     handleClose();
+    //window.location.reload();
   };
 
   const formatDate = (date) => {
@@ -94,21 +94,10 @@ export default function EmployeeManagementPage() {
 
   // close dialog
   const handleClose = () => {
-    setEmploy({
-      fullname: "",
-      phonenumber: "",
-      email: "",
-      address: "",
-      gender: "",
-      personalId: "",
-      cwtId: 1,
-      username: "",
-      password: "",
-    });
     setOpen(false);
   };
   const dispatch = useDispatch();
-  const employees = useSelector((state) => state.employee);
+  const employees = useSelector((state) => state.manager);
   const [employ, setEmploy] = useState({
     fullname: "",
     phonenumber: "",
@@ -136,7 +125,7 @@ export default function EmployeeManagementPage() {
     });
   };
   useEffect(() => {
-    dispatch(getAllEmployee());
+    dispatch(getManagers());
   }, []);
   return (
     <GridContainer>
@@ -222,9 +211,9 @@ export default function EmployeeManagementPage() {
                 {...register("password", {
                   required: "Password is required.",
                   pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/i,
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/i,
                     message:
-                      "Password must have Uppercase, Lowercase, Special Char, Number and minLength: 6",
+                      "Password must have Uppercase, Lowercase, Special Char and Number",
                   },
                 })}
                 error={!!errors.password}

@@ -11,6 +11,7 @@ import importNote from "./importReducer";
 import exportP from "./exportReducer";
 import revenue from "./revenueReducer";
 import customer from "./customerReducer";
+import manager from "./managerReducer";
 
 const allReducers = combineReducers({
   brand,
@@ -25,6 +26,7 @@ const allReducers = combineReducers({
   exportP,
   revenue,
   customer,
+  manager,
 });
 
 export default allReducers;

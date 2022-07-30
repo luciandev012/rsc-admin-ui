@@ -52,7 +52,7 @@ export default function ProductManagementPage() {
   };
 
   // page
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
@@ -74,6 +74,18 @@ export default function ProductManagementPage() {
 
   // close dialog
   const handleClose = () => {
+    setProduct({
+      productId: 1,
+      productName: "",
+      productCode: "",
+      productDescribe: "",
+      price: "",
+      quantity: "",
+      discountId: "",
+      subCategoryId: "",
+      unitId: "",
+      categoryId: "",
+    });
     setOpen(false);
   };
 
@@ -294,7 +306,7 @@ export default function ProductManagementPage() {
           </CardBody>
           <TablePagination
             component="div"
-            count={100}
+            count={products.length}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

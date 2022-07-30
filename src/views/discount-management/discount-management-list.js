@@ -77,6 +77,10 @@ export default function DiscountManagementPage() {
 
   // open dialog
   const handleClickOpen = () => {
+    setDisc({
+      discountName: "",
+      discountPercent: "",
+    });
     setOpen(true);
   };
 

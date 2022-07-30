@@ -40,6 +40,7 @@ export default function BrandManagementPage() {
     dispatch(addBrand(data));
     handleClose();
     dispatch(getAllBrand());
+    window.location.reload();
     //fetchBrand();
   };
   const dispatch = useDispatch();

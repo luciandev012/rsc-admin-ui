@@ -27,7 +27,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUnit, addUnit } from "actions/unit";
-import { FormControlLabel, Checkbox } from "@mui/material";
 
 export default function UnitsManagementPage() {
   // validation
@@ -40,7 +39,6 @@ export default function UnitsManagementPage() {
     dispatch(
       addUnit({
         name: unit.name,
-        disabled: disable,
       })
     );
     handleClose();
@@ -71,6 +69,10 @@ export default function UnitsManagementPage() {
 
   // close dialog
   const handleClose = () => {
+    setUnit({
+      name: "",
+      disabled: false,
+    });
     setOpen(false);
   };
   const dispatch = useDispatch();
@@ -79,7 +81,6 @@ export default function UnitsManagementPage() {
     name: "",
     disabled: false,
   });
-  const [disable, setDisabled] = useState(false);
   const handleChange = (event) => {
     const { name, value } = event.target;
     setUnit((prevUnit) => {
@@ -132,16 +133,6 @@ export default function UnitsManagementPage() {
                 variant="outlined"
                 value={unit.name}
                 onChange={handleChange}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={disable}
-                    onChange={() => setDisabled(!disable)}
-                    name="disabled"
-                  />
-                }
-                label="Disable"
               />
             </DialogContent>
             <DialogActions>
