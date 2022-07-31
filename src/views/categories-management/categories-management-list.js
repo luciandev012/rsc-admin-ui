@@ -35,17 +35,14 @@ export default function CategoriesManagementPage() {
     handleSubmit,
     register,
     formState: { errors },
+    resetField,
   } = useForm();
-  const onSubmit = () => {
-    const data = {
-      categoryName: cate.categoryName,
-      subCategories: cate.subCategories.split(",").map((sub) => {
-        return {
-          subCategoryName: sub,
-        };
-      }),
+  const onSubmit = (data) => {
+    const category = {
+      categoryName: data.categoryName,
+      subCategories: subCateList,
     };
-    dispatch(addCategory(data));
+    dispatch(addCategory(category));
     handleClose();
   };
 
@@ -72,27 +69,39 @@ export default function CategoriesManagementPage() {
 
   // close dialog
   const handleClose = () => {
-    setCate({
-      categoryName: "",
-      subCategories: "",
-    });
+    resetField("categoryName");
+    resetField("subCategoryName");
     setOpen(false);
   };
   const dispatch = useDispatch();
   const cates = useSelector((state) => state.category);
-  const [cate, setCate] = useState({
-    categoryName: "",
-    subCategories: "",
-  });
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setCate((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
+  // const [cate, setCate] = useState({
+  //   categoryName: "",
+  // });
+  const [subCateList, setSubCateList] = useState([{ subCategoryName: "" }]);
+  const handleAdd = () => {
+    setSubCateList([...subCateList, { subCategoryName: "" }]);
   };
+  const handleDelete = (index) => {
+    const list = [...subCateList];
+    list.splice(index, 1);
+    setSubCateList(list);
+  };
+  const handleSubcateChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...subCateList];
+    list[index][name] = value;
+    setSubCateList(list);
+  };
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setCate((prevValue) => {
+  //     return {
+  //       ...prevValue,
+  //       [name]: value,
+  //     };
+  //   });
+  // };
   useEffect(() => {
     dispatch(getAllCategories());
   }, []);
@@ -132,26 +141,36 @@ export default function CategoriesManagementPage() {
                 })}
                 error={Boolean(errors.categoryName)}
                 helperText={errors.categoryName?.message}
-                value={cate.categoryName}
-                onChange={handleChange}
+                // value={cate.categoryName}
+                // onChange={handleChange}
                 variant="outlined"
               />
-              <TextField
-                margin="dense"
-                id="subCate"
-                label="Sub categories"
-                type="text"
-                fullWidth
-                name="subCategories"
-                {...register("subCategories", {
-                  required: "SubCategory name is required.",
-                })}
-                error={Boolean(errors.subCategories)}
-                helperText={errors.subCategories?.message}
-                value={cate.subCategories}
-                onChange={handleChange}
-              />
-              <p>Type sub categories here, separate by comma</p>
+              <Button onClick={handleAdd} type="button">
+                Add sub category
+              </Button>
+              {subCateList.map((subc, index) => (
+                <>
+                  <TextField
+                    key={index}
+                    margin="dense"
+                    id="subCate"
+                    label="Sub categories"
+                    type="text"
+                    fullWidth
+                    name="subCategoryName"
+                    // {...register("subCate", {
+                    //   required: "SubCategory name is required.",
+                    // })}
+                    // error={Boolean(errors.subCate)}
+                    // helperText={errors.subCate?.message}
+                    value={subc.subCategoryName}
+                    onChange={(e) => handleSubcateChange(e, index)}
+                  />
+                  <Button type="button" onClick={() => handleDelete(index)}>
+                    Remove
+                  </Button>
+                </>
+              ))}
             </DialogContent>
             <DialogActions>
               <Button type="submit">Save</Button>

@@ -37,15 +37,16 @@ export default function DiscountManagementPage() {
     handleSubmit,
     register,
     formState: { errors },
+    resetField,
   } = useForm();
-  const onSubmit = () => {
-    const data = {
-      discountName: disc.discountName,
-      discountPercent: disc.discountPercent,
+  const onSubmit = (data) => {
+    const dataDis = {
+      discountName: data.discountName,
+      discountPercent: data.discountPercent,
       dateCreate: formatDate(dateCreate),
       dateEnd: formatDate(dateEnd),
     };
-    dispatch(addDiscount(data));
+    dispatch(addDiscount(dataDis));
     handleClose();
   };
   const formatDate = (date) => {
@@ -77,34 +78,32 @@ export default function DiscountManagementPage() {
 
   // open dialog
   const handleClickOpen = () => {
-    setDisc({
-      discountName: "",
-      discountPercent: "",
-    });
     setOpen(true);
   };
 
   // close dialog
   const handleClose = () => {
+    resetField("discountName");
+    resetField("discountPercent");
     setOpen(false);
   };
   const dispatch = useDispatch();
   const discounts = useSelector((state) => state.discount);
-  const [disc, setDisc] = useState({
-    discountName: "",
-    discountPercent: "",
-  });
+  // const [disc, setDisc] = useState({
+  //   discountName: "",
+  //   discountPercent: "",
+  // });
   const [dateCreate, setDateCreate] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setDisc((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
-  };
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setDisc((prevValue) => {
+  //     return {
+  //       ...prevValue,
+  //       [name]: value,
+  //     };
+  //   });
+  // };
   useEffect(() => {
     dispatch(getAllDiscount());
   }, []);
@@ -142,8 +141,8 @@ export default function DiscountManagementPage() {
                 })}
                 error={Boolean(errors.discountName)}
                 helperText={errors.discountName?.message}
-                value={disc.discountName}
-                onChange={handleChange}
+                // value={disc.discountName}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -157,8 +156,8 @@ export default function DiscountManagementPage() {
                 })}
                 error={Boolean(errors.discountPercent)}
                 helperText={errors.discountPercent?.message}
-                value={disc.discountPercent}
-                onChange={handleChange}
+                // value={disc.discountPercent}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <LocalizationProvider

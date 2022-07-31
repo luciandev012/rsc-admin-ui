@@ -42,7 +42,7 @@ export default function ManagerManagementPage() {
     register,
     formState: { errors },
   } = useForm();
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const fd = new FormData();
     fd.append("fileAvatar", image);
     fd.append("dateOfBirth", formatDate(dateOfBirth));
@@ -55,9 +55,9 @@ export default function ManagerManagementPage() {
     fd.append("cwtId", employ.cwtId);
     fd.append("personalId", employ.personalId);
     fd.append("gender", disabled);
-    dispatch(addManager(fd));
+    await dispatch(addManager(fd));
     handleClose();
-    //window.location.reload();
+    window.location.reload();
   };
 
   const formatDate = (date) => {
@@ -211,9 +211,9 @@ export default function ManagerManagementPage() {
                 {...register("password", {
                   required: "Password is required.",
                   pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/i,
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/i,
                     message:
-                      "Password must have Uppercase, Lowercase, Special Char and Number",
+                      "Password must have Uppercase, Lowercase, Special Char and Number Length 6",
                   },
                 })}
                 error={!!errors.password}

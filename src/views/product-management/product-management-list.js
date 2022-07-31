@@ -35,24 +35,25 @@ export default function ProductManagementPage() {
     handleSubmit,
     register,
     formState: { errors },
+    resetField,
   } = useForm();
-  const onSubmit = () => {
+  const onSubmit = (data) => {
     const fd = new FormData();
     fd.append("files", image);
-    fd.append("productName", product.productName);
-    fd.append("productCode", product.productCode);
-    fd.append("productDescribe", product.productDescribe);
-    fd.append("price", product.price);
-    fd.append("quantity", product.quantity);
-    fd.append("unitId", 1);
-    fd.append("subCategoryId", 1);
-    fd.append("productId", product.productId);
+    fd.append("productName", data.productName);
+    fd.append("productCode", data.productCode);
+    fd.append("productDescribe", data.productDescribe);
+    fd.append("price", data.price);
+    fd.append("quantity", data.quantity);
+    fd.append("unitId", data.unitId);
+    fd.append("subCategoryId", data.subCategoryId);
+    fd.append("productId", 1);
     dispatch(addProduct(fd));
     handleClose();
   };
 
   // page
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
@@ -74,18 +75,13 @@ export default function ProductManagementPage() {
 
   // close dialog
   const handleClose = () => {
-    setProduct({
-      productId: 1,
-      productName: "",
-      productCode: "",
-      productDescribe: "",
-      price: "",
-      quantity: "",
-      discountId: "",
-      subCategoryId: "",
-      unitId: "",
-      categoryId: "",
-    });
+    resetField("productName");
+    resetField("productCode");
+    resetField("productDescribe");
+    resetField("price");
+    resetField("quantity");
+    resetField("unitId");
+    resetField("subCategoryId");
     setOpen(false);
   };
 
@@ -95,31 +91,31 @@ export default function ProductManagementPage() {
   useEffect(() => {
     dispatch(getAllProducts());
   }, []);
-  const [product, setProduct] = useState({
-    productId: 1,
-    productName: "",
-    productCode: "",
-    productDescribe: "",
-    price: "",
-    quantity: "",
-    discountId: "",
-    subCategoryId: "",
-    unitId: "",
-    categoryId: "",
-  });
+  // const [product, setProduct] = useState({
+  //   productId: 1,
+  //   productName: "",
+  //   productCode: "",
+  //   productDescribe: "",
+  //   price: "",
+  //   quantity: "",
+  //   discountId: "",
+  //   subCategoryId: "",
+  //   unitId: "",
+  //   categoryId: "",
+  // });
   const [image, setImage] = useState("");
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   };
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setProduct((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
-  };
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setProduct((prevValue) => {
+  //     return {
+  //       ...prevValue,
+  //       [name]: value,
+  //     };
+  //   });
+  // };
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -155,8 +151,8 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.productName}
                 helperText={errors.productName?.message}
-                value={product.productName}
-                onChange={handleChange}
+                // value={product.productName}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -170,8 +166,8 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.productCode}
                 helperText={errors.productCode?.message}
-                value={product.productCode}
-                onChange={handleChange}
+                // value={product.productCode}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -185,8 +181,8 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.productDescribe}
                 helperText={errors.productDescribe?.message}
-                value={product.productDescribe}
-                onChange={handleChange}
+                // value={product.productDescribe}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -200,8 +196,8 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.price}
                 helperText={errors.price?.message}
-                value={product.price}
-                onChange={handleChange}
+                // value={product.price}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -215,8 +211,8 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.quantity}
                 helperText={errors.quantity?.message}
-                value={product.quantity}
-                onChange={handleChange}
+                // value={product.quantity}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -231,8 +227,8 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.unitId}
                 helperText={errors.unitId?.message}
-                value={product.unitId}
-                onChange={handleChange}
+                // value={product.unitId}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -247,8 +243,8 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.subCategoryId}
                 helperText={errors.subCategoryId?.message}
-                value={product.subCategoryId}
-                onChange={handleChange}
+                // value={product.subCategoryId}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <label htmlFor="upload-photo">
@@ -306,7 +302,7 @@ export default function ProductManagementPage() {
           </CardBody>
           <TablePagination
             component="div"
-            count={products.length}
+            count={100}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

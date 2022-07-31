@@ -34,11 +34,12 @@ export default function UnitsManagementPage() {
     register,
     handleSubmit,
     formState: { errors },
+    resetField,
   } = useForm();
-  const onSubmit = () => {
+  const onSubmit = (data) => {
     dispatch(
       addUnit({
-        name: unit.name,
+        name: data.name,
       })
     );
     handleClose();
@@ -69,27 +70,24 @@ export default function UnitsManagementPage() {
 
   // close dialog
   const handleClose = () => {
-    setUnit({
-      name: "",
-      disabled: false,
-    });
+    resetField("name");
     setOpen(false);
   };
   const dispatch = useDispatch();
   const units = useSelector((state) => state.unit);
-  const [unit, setUnit] = useState({
-    name: "",
-    disabled: false,
-  });
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setUnit((prevUnit) => {
-      return {
-        ...prevUnit,
-        [name]: value,
-      };
-    });
-  };
+  // const [unit, setUnit] = useState({
+  //   name: "",
+  //   disabled: false,
+  // });
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setUnit((prevUnit) => {
+  //     return {
+  //       ...prevUnit,
+  //       [name]: value,
+  //     };
+  //   });
+  // };
 
   useEffect(() => {
     dispatch(getAllUnit());
@@ -131,8 +129,8 @@ export default function UnitsManagementPage() {
                 error={Boolean(errors.name)}
                 helperText={errors.name?.message}
                 variant="outlined"
-                value={unit.name}
-                onChange={handleChange}
+                // value={unit.name}
+                // onChange={handleChange}
               />
             </DialogContent>
             <DialogActions>
