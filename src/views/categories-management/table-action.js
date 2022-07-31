@@ -34,11 +34,26 @@ export function TableEditButton({ data }) {
     setOpenDialogEdit(false);
   };
 
+  const [subCateList, setSubCateList] = React.useState(data.subCategories);
+  const handleAdd = () => {
+    setSubCateList([...subCateList, { subCategoryName: "" }]);
+  };
+  const handleDelete = (index) => {
+    const list = [...subCateList];
+    list.splice(index, 1);
+    setSubCateList(list);
+  };
+  const handleSubcateChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...subCateList];
+    list[index][name] = value;
+    setSubCateList(list);
+  };
   const onSubmit = async () => {
     let putData = {
       categoryName: name,
       categoryId: data.categoryId,
-      subCategories: data.subCategories,
+      subCategories: subCateList,
     };
     dispatch(updateCategory(putData));
     handleCloseEdit();
@@ -78,6 +93,32 @@ export function TableEditButton({ data }) {
               variant="outlined"
               fullWidth
             />
+            <Button onClick={handleAdd} type="button">
+              Add sub category
+            </Button>
+            {subCateList.map((subc, index) => (
+              <>
+                <TextField
+                  key={index}
+                  margin="dense"
+                  id="subCate"
+                  label="Sub categories"
+                  type="text"
+                  fullWidth
+                  name="subCategoryName"
+                  // {...register("subCate", {
+                  //   required: "SubCategory name is required.",
+                  // })}
+                  // error={Boolean(errors.subCate)}
+                  // helperText={errors.subCate?.message}
+                  value={subc.subCategoryName}
+                  onChange={(e) => handleSubcateChange(e, index)}
+                />
+                <Button type="button" onClick={() => handleDelete(index)}>
+                  Remove
+                </Button>
+              </>
+            ))}
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>
