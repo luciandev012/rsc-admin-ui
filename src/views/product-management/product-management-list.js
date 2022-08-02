@@ -91,31 +91,11 @@ export default function ProductManagementPage() {
   useEffect(() => {
     dispatch(getAllProducts());
   }, []);
-  // const [product, setProduct] = useState({
-  //   productId: 1,
-  //   productName: "",
-  //   productCode: "",
-  //   productDescribe: "",
-  //   price: "",
-  //   quantity: "",
-  //   discountId: "",
-  //   subCategoryId: "",
-  //   unitId: "",
-  //   categoryId: "",
-  // });
   const [image, setImage] = useState("");
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   };
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setProduct((prevValue) => {
-  //     return {
-  //       ...prevValue,
-  //       [name]: value,
-  //     };
-  //   });
-  // };
+
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -151,9 +131,6 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.productName}
                 helperText={errors.productName?.message}
-                // value={product.productName}
-                // onChange={handleChange}
-                variant="outlined"
               />
               <TextField
                 margin="dense"
@@ -166,8 +143,6 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.productCode}
                 helperText={errors.productCode?.message}
-                // value={product.productCode}
-                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -181,8 +156,6 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.productDescribe}
                 helperText={errors.productDescribe?.message}
-                // value={product.productDescribe}
-                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -196,8 +169,6 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.price}
                 helperText={errors.price?.message}
-                // value={product.price}
-                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -227,8 +198,6 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.unitId}
                 helperText={errors.unitId?.message}
-                // value={product.unitId}
-                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -243,8 +212,6 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.subCategoryId}
                 helperText={errors.subCategoryId?.message}
-                // value={product.subCategoryId}
-                // onChange={handleChange}
                 variant="outlined"
               />
               <label htmlFor="upload-photo">

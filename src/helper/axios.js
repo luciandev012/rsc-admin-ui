@@ -4,7 +4,7 @@ const token = window.localStorage.getItem("token");
 const auth = `Bearer ${token}`;
 //console.log(token);
 const axiosIntance = axios.create({
-  baseURL: "https://localhost:5001/api/v1/",
+  baseURL: "http://localhost:5000/api/v1/",
   headers: {
     Authorization: token ? auth : "",
   },

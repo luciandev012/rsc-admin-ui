@@ -89,21 +89,8 @@ export default function DiscountManagementPage() {
   };
   const dispatch = useDispatch();
   const discounts = useSelector((state) => state.discount);
-  // const [disc, setDisc] = useState({
-  //   discountName: "",
-  //   discountPercent: "",
-  // });
   const [dateCreate, setDateCreate] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setDisc((prevValue) => {
-  //     return {
-  //       ...prevValue,
-  //       [name]: value,
-  //     };
-  //   });
-  // };
   useEffect(() => {
     dispatch(getAllDiscount());
   }, []);

@@ -44,13 +44,13 @@ export default function ExportManagementPage() {
       managementId: JSON.parse(localStorage.user).id,
       exportDate: formatDate(dateCreate),
       description: exportNote.description,
-      exportDetailModelViews: [
-        {
-          productId: productId,
-          price: exportNote.price,
-          quanlity: exportNote.quantity,
-        },
-      ],
+      exportDetailModelViews: listProduct.map((product) => {
+        return {
+          productId: product.productId,
+          price: product.price,
+          quanlity: product.quantity,
+        };
+      }),
     };
     dispatch(addExportNote(data));
     handleClose();
@@ -89,8 +89,6 @@ export default function ExportManagementPage() {
   // close dialog
   const handleClose = () => {
     setExportNote({
-      price: "",
-      quantity: "",
       description: "",
     });
     setOpen(false);
@@ -98,8 +96,6 @@ export default function ExportManagementPage() {
   const dispatch = useDispatch();
   const exports = useSelector((state) => state.exportP);
   const [exportNote, setExportNote] = useState({
-    price: "",
-    quantity: "",
     description: "",
   });
   const [productId, setProductId] = useState("");
@@ -109,7 +105,13 @@ export default function ExportManagementPage() {
     dispatch(getAllProducts());
     dispatch(getAllExportNote());
   }, []);
-  const handleChange = (event) => {
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...listProduct];
+    list[index][name] = value;
+    setListProduct(list);
+  };
+  const handleChangeDes = (event) => {
     const { name, value } = event.target;
     setExportNote((prevValue) => {
       return {
@@ -118,8 +120,25 @@ export default function ExportManagementPage() {
       };
     });
   };
+  const [listProduct, setListProduct] = useState([]);
   const handleChangeSelect = (event) => {
+    setListProduct([
+      ...listProduct,
+      {
+        productId: event.target.value,
+        price: 0,
+        quantity: 0,
+        productName: products.filter(
+          (p) => p.productId == event.target.value
+        )[0].productName,
+      },
+    ]);
     setProductId(event.target.value);
+  };
+  const handleDelete = (index) => {
+    const list = [...listProduct];
+    list.splice(index, 1);
+    setListProduct(list);
   };
   return (
     <GridContainer>
@@ -152,36 +171,60 @@ export default function ExportManagementPage() {
                     id="demo-simple-select"
                     value={productId}
                     label="Product"
+                    name="productName"
                     onChange={handleChangeSelect}
                   >
                     {products.map((product, key) => (
-                      <MenuItem value={product.productId} key={key}>
+                      <MenuItem
+                        value={product.productId}
+                        name={product.productName}
+                        key={key}
+                      >
                         {product.productName}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Box>
-              <TextField
-                margin="dense"
-                id="price"
-                label="Price"
-                type="text"
-                name="price"
-                value={exportNote.price}
-                onChange={handleChange}
-                variant="outlined"
-              />
-              <TextField
-                margin="dense"
-                id="quantity"
-                label="Quantity"
-                type="text"
-                name="quantity"
-                value={exportNote.quantity}
-                onChange={handleChange}
-                variant="outlined"
-              />
+              {listProduct.map((product, index) => (
+                <div key={index}>
+                  <TextField
+                    margin="dense"
+                    id="price"
+                    label="Product Name"
+                    type="text"
+                    name="name"
+                    fullWidth
+                    value={product.productName}
+                    disabled={true}
+                    variant="outlined"
+                  />
+                  <TextField
+                    margin="dense"
+                    id="price"
+                    label="Price"
+                    type="text"
+                    name="price"
+                    value={product.price}
+                    onChange={(e) => handleChange(e, index)}
+                    variant="outlined"
+                  />
+                  <TextField
+                    key={index}
+                    margin="dense"
+                    id="quantity"
+                    label="Quantity"
+                    type="text"
+                    name="quantity"
+                    value={product.quantity}
+                    onChange={(e) => handleChange(e, index)}
+                    variant="outlined"
+                  />
+                  <Button type="button" onClick={() => handleDelete(index)}>
+                    Remove
+                  </Button>
+                </div>
+              ))}
               <LocalizationProvider
                 className="date"
                 dateAdapter={AdapterDateFns}
@@ -202,7 +245,7 @@ export default function ExportManagementPage() {
                 type="text"
                 name="description"
                 value={exportNote.description}
-                onChange={handleChange}
+                onChange={handleChangeDes}
                 variant="outlined"
               />
             </DialogContent>

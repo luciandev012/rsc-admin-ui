@@ -14,7 +14,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
-import { Checkbox, FormControlLabel } from "@mui/material";
 import { useDispatch } from "react-redux/es/exports";
 import { updateBrand } from "actions/brand";
 import { deleteBrand } from "actions/brand";
@@ -33,7 +32,6 @@ export function TableEditButton({ data }) {
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
   const [name, setName] = React.useState(data.brandname);
-  const [disabled, setDisabled] = React.useState(data.disabled);
   const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
@@ -48,7 +46,6 @@ export function TableEditButton({ data }) {
     let putData = {
       brandId: data.brandId,
       brandname: name,
-      disabled: disabled,
     };
     console.log("putDATA", putData);
     dispatch(updateBrand(putData));
@@ -95,17 +92,6 @@ export function TableEditButton({ data }) {
               value={name}
               variant="outlined"
               fullWidth
-              // defaultValue="Nguyen Tuan Bang"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={disabled}
-                  onChange={() => setDisabled(!disabled)}
-                  name="disabled"
-                />
-              }
-              label="Disable"
             />
           </DialogContent>
           <DialogActions>

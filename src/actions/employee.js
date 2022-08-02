@@ -7,11 +7,14 @@ export const getAllEmployee = () => async (dispatch) => {
 };
 
 export const addEmployee = (form) => async (dispatch) => {
-  const { data, status } = await api.addEmployee(form);
-  console.log(data);
-  if (status == 200) {
+  const res = await api.addEmployee(form);
+  if (res.data[0] == "true") {
     const { data } = await staff.getALLStaff();
     dispatch({ type: "GETALL", payload: data });
+  } else {
+    let message = "";
+    res.data.map((m) => (message = message + m + " "));
+    alert("Update failed: " + message);
   }
 };
 
@@ -22,7 +25,12 @@ export const deleteEmployee = (id) => async (dispatch) => {
 
 export const updateEmployee = (form) => async (dispatch) => {
   const res = await api.updateEmployee(form);
-  console.log(res);
-  const { data } = await staff.getALLStaff();
-  dispatch({ type: "GETALL", payload: data });
+  if (res.data[0] == "true") {
+    const { data } = await staff.getALLStaff();
+    dispatch({ type: "GETALL", payload: data });
+  } else {
+    let message = "";
+    res.data.map((m) => (message = message + m + " "));
+    alert("Update failed: " + message);
+  }
 };

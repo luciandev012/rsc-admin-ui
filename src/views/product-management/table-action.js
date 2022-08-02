@@ -57,6 +57,17 @@ export function TableEditButton({ data }) {
   const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
+    setProduct({
+      productName: data.productName,
+      productCode: data.productCode,
+      productDescribe: data.productDescribe,
+      price: data.price,
+      quantity: data.quantity,
+      discountId: data.discountId,
+      subCategoryId: data.subCategoryId,
+      unitId: data.unitId,
+      categoryId: data.categoryId,
+    });
     setOpenDialogEdit(true);
   };
 
@@ -71,8 +82,8 @@ export function TableEditButton({ data }) {
     fd.append("productCode", product.productCode);
     fd.append("price", product.price);
     fd.append("quantity", product.quantity);
-    fd.append("unitId", 1);
-    fd.append("subCategoryId", 1);
+    fd.append("unitId", product.unitId);
+    fd.append("subCategoryId", product.subCategoryId);
     fd.append("productId", data.productId);
     dispatch(updateProduct(fd));
     handleCloseEdit();

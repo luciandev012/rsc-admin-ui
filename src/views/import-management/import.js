@@ -44,15 +44,16 @@ export default function ImportManagementPage() {
     const data = {
       managementId: JSON.parse(localStorage.user).id,
       dateReceive: formatDate(dateCreate),
-      importNoteDetailModelViews: [
-        {
-          productId: productId,
-          price: importNote.price,
-          quanlity: importNote.quantity,
-        },
-      ],
+      importNoteDetailModelViews: listProduct.map((product) => {
+        return {
+          productId: product.productId,
+          price: product.price,
+          quanlity: product.quantity,
+        };
+      }),
     };
     dispatch(addImportNote(data));
+    //console.log(data);
     handleClose();
   };
   const formatDate = (date) => {
@@ -88,18 +89,18 @@ export default function ImportManagementPage() {
   };
   // close dialog
   const handleClose = () => {
-    setImportNote({
-      price: "",
-      quantity: "",
-    });
+    // setImportNote({
+    //   price: "",
+    //   quantity: "",
+    // });
     setOpen(false);
   };
   const dispatch = useDispatch();
   const importNotes = useSelector((state) => state.importNote);
-  const [importNote, setImportNote] = useState({
-    price: "",
-    quantity: "",
-  });
+  // const [importNote, setImportNote] = useState({
+  //   price: "",
+  //   quantity: "",
+  // });
   const [productId, setProductId] = useState("");
   const [dateCreate, setDateCreate] = useState(new Date());
   const products = useSelector((state) => state.product);
@@ -107,17 +108,31 @@ export default function ImportManagementPage() {
     dispatch(getAllProducts());
     dispatch(getAllImportNote());
   }, []);
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setImportNote((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...listProduct];
+    list[index][name] = value;
+    setListProduct(list);
   };
+  const [listProduct, setListProduct] = useState([]);
   const handleChangeSelect = (event) => {
+    setListProduct([
+      ...listProduct,
+      {
+        productId: event.target.value,
+        price: 0,
+        quantity: 0,
+        productName: products.filter(
+          (p) => p.productId == event.target.value
+        )[0].productName,
+      },
+    ]);
     setProductId(event.target.value);
+  };
+  const handleDelete = (index) => {
+    const list = [...listProduct];
+    list.splice(index, 1);
+    setListProduct(list);
   };
   return (
     <GridContainer>
@@ -142,7 +157,7 @@ export default function ImportManagementPage() {
           <form>
             <DialogTitle>Add New</DialogTitle>
             <DialogContent>
-              <Box sx={{ minWidth: 120 }}>
+              <Box sm={{ minWidth: 120 }}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Product</InputLabel>
                   <Select
@@ -150,36 +165,61 @@ export default function ImportManagementPage() {
                     id="demo-simple-select"
                     value={productId}
                     label="Product"
+                    name="productName"
                     onChange={handleChangeSelect}
                   >
                     {products.map((product, key) => (
-                      <MenuItem value={product.productId} key={key}>
+                      <MenuItem
+                        value={product.productId}
+                        name={product.productName}
+                        key={key}
+                      >
                         {product.productName}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Box>
-              <TextField
-                margin="dense"
-                id="price"
-                label="Price"
-                type="text"
-                name="price"
-                value={importNote.price}
-                onChange={handleChange}
-                variant="outlined"
-              />
-              <TextField
-                margin="dense"
-                id="quantity"
-                label="Quantity"
-                type="text"
-                name="quantity"
-                value={importNote.quantity}
-                onChange={handleChange}
-                variant="outlined"
-              />
+              {listProduct.map((product, index) => (
+                <div key={index}>
+                  <TextField
+                    margin="dense"
+                    id="price"
+                    label="Product Name"
+                    type="text"
+                    name="name"
+                    fullWidth
+                    value={product.productName}
+                    disabled={true}
+                    variant="outlined"
+                  />
+                  <TextField
+                    margin="dense"
+                    id="price"
+                    label="Price"
+                    type="text"
+                    name="price"
+                    value={product.price}
+                    onChange={(e) => handleChange(e, index)}
+                    variant="outlined"
+                  />
+                  <TextField
+                    key={index}
+                    margin="dense"
+                    id="quantity"
+                    label="Quantity"
+                    type="text"
+                    name="quantity"
+                    value={product.quantity}
+                    onChange={(e) => handleChange(e, index)}
+                    variant="outlined"
+                  />
+                  <Button type="button" onClick={() => handleDelete(index)}>
+                    Remove
+                  </Button>
+                </div>
+              ))}
+
               <LocalizationProvider
                 className="date"
                 dateAdapter={AdapterDateFns}

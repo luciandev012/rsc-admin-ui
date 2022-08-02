@@ -73,6 +73,7 @@ export function TableEditButton({ data }) {
   };
 
   const handleCloseEdit = () => {
+    setDisc(data);
     setOpenDialogEdit(false);
   };
 

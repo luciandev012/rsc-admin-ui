@@ -55,6 +55,7 @@ export function TableEditButton({ data }) {
   };
 
   const handleCloseEdit = () => {
+    setEmploy(data);
     setOpenDialogEdit(false);
   };
 
