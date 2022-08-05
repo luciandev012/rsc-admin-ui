@@ -1,8 +1,8 @@
 const customer = (state = [], action) => {
   switch (action.type) {
-    case "GETALL":
+    case "GETALLCUS":
       return action.payload;
-    case "DELETE":
+    case "DELETECUS":
       return state.filter((cus) => cus.id != action.payload);
     default:
       return state;

@@ -61,10 +61,12 @@ class LoginPage extends React.Component {
           localStorage.setItem("user", JSON.stringify(rest));
           localStorage.setItem("token", token);
           return history.push("/manager");
+        } else {
+          alert("Incorrect password");
         }
       })
-      .catch(() => {
-        alert("Incorrect password");
+      .catch((err) => {
+        console.log(err);
       });
   };
   handleToggle = (value) => {

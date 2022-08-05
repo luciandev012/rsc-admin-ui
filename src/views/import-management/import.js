@@ -89,10 +89,7 @@ export default function ImportManagementPage() {
   };
   // close dialog
   const handleClose = () => {
-    // setImportNote({
-    //   price: "",
-    //   quantity: "",
-    // });
+    setListProduct([]);
     setOpen(false);
   };
   const dispatch = useDispatch();
@@ -244,17 +241,17 @@ export default function ImportManagementPage() {
         <Card>
           <CardHeader color="primary"></CardHeader>
           <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["ID", "ProductId", "Quantity", "Price", "Actions"]}
-              tableData={importNotes.map((imp) => [
-                imp.importNoteId,
-                imp.productId,
-                imp.quanlity,
-                imp.price,
-              ])}
-              editData={importNotes}
-            />
+            {importNotes ? (
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["ID", "Date receive", "Actions"]}
+                tableData={importNotes.map((imp) => [
+                  imp.importNoteId,
+                  imp.dateReceive,
+                ])}
+                editData={importNotes}
+              />
+            ) : null}
           </CardBody>
           <TablePagination
             component="div"

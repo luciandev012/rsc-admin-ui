@@ -19,46 +19,43 @@ import { deleteImportNote } from "actions/import";
 import { updateImportNote } from "actions/import";
 
 export function TableEditButton({ data }) {
-  // validation
+  // edit
+  const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
+  const [importNotes, setImportNotes] = React.useState(data.importNoteDetails);
+
   const { handleSubmit } = useForm();
-  //console.log(data);
   const onSubmit = async () => {
     const putData = {
       importNoteId: data.importNoteId,
       managementId: JSON.parse(localStorage.user).id,
-      importNoteDetailModelViews: [
-        {
-          importNoteDetailId: data.importNoteDetailId,
-          importNoteId: data.importNoteId,
-          price: importNote.price,
-          quanlity: importNote.quanlity,
-          productId: data.productId,
-        },
-      ],
+      importNoteDetailModelViews: importNotes.map((imp) => {
+        return {
+          importNoteDetailId: imp.importNoteDetailId,
+          importNoteId: imp.importNoteId,
+          price: imp.price,
+          quanlity: imp.quanlity,
+          productId: imp.productId,
+        };
+      }),
     };
     dispatch(updateImportNote(putData));
     handleCloseEdit();
   };
+  React.useEffect(() => {
+    setImportNotes(data.importNoteDetails);
+  }, [data]);
 
-  //console.log(errors);
   const dispatch = useDispatch();
-  // edit
-  const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [importNote, setImportNote] = React.useState(data);
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setImportNote((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
 
   const handleClickOpenEdit = () => {
     setOpenDialogEdit(true);
   };
-
+  const handleChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...importNotes];
+    list[index][name] = value;
+    setImportNotes(list);
+  };
   const handleCloseEdit = () => {
     setOpenDialogEdit(false);
   };
@@ -85,29 +82,48 @@ export function TableEditButton({ data }) {
       >
         <form>
           <DialogTitle>Edit</DialogTitle>
+          {console.log(data.importNoteDetails)}
           <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="price"
-              label="Price"
-              type="text"
-              name="price"
-              value={importNote.price}
-              onChange={handleChange}
-              variant="outlined"
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="quantity"
-              label="Quantity"
-              type="text"
-              name="quanlity"
-              value={importNote.quanlity}
-              onChange={handleChange}
-              variant="outlined"
-            />
+            {importNotes
+              ? importNotes.map((imp, index) => (
+                  <div key={index}>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="productId"
+                      label="Product Id"
+                      type="text"
+                      name="productId"
+                      value={imp.productId}
+                      variant="outlined"
+                      fullWidth
+                      disabled={true}
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="price"
+                      label="Price"
+                      type="text"
+                      name="price"
+                      value={imp.price}
+                      onChange={(e) => handleChange(e, index)}
+                      variant="outlined"
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="quantity"
+                      label="Quantity"
+                      type="text"
+                      name="quanlity"
+                      value={imp.quanlity}
+                      onChange={(e) => handleChange(e, index)}
+                      variant="outlined"
+                    />
+                  </div>
+                ))
+              : null}
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>

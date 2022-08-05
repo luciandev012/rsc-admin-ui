@@ -7,7 +7,7 @@ export const getAllProducts = () => async (dispatch) => {
 
 export const deleteProduct = (id) => async (dispatch) => {
   await api.deleteProduct(id);
-  dispatch({ type: "DELETE", payload: id });
+  dispatch({ type: "DELETEPRODUCT", payload: id });
 };
 export const addProduct = (form) => async (dispatch) => {
   const res = await api.addProduct(form);

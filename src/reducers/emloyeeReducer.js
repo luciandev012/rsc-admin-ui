@@ -1,15 +1,10 @@
 const employee = (state = [], action) => {
   switch (action.type) {
-    case "GETALL":
+    case "GETALLEMP":
       return action.payload;
-    case "CREATE":
+    case "CREATEEMP":
       return [...state, action.payload];
-    case "UPDATE": {
-      return state.map((brand) =>
-        brand.brandId !== action.payload.brandId ? brand : action.payload
-      );
-    }
-    case "DELETE": {
+    case "DELETEEMP": {
       return state.filter((emp) => emp.id != action.payload);
     }
     default:

@@ -1,9 +1,9 @@
 const exportP = (state = [], action) => {
   switch (action.type) {
-    case "GETALL": {
+    case "GETALLEXP": {
       return action.payload;
     }
-    case "DELETE": {
+    case "DELETEEXP": {
       return state.filter((imp) => imp.exportId != action.payload);
     }
     default:

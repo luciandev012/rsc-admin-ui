@@ -71,8 +71,12 @@ export default function CustomTable(props) {
                   {/* Actions */}
                   <TableCell className={classes.tableCell} key={key}>
                     <Stack direction="row" spacing={0.5}>
-                      <TableEditButton data={editData[key]} />
-                      <TableDeleteButton data={editData[key]} />
+                      {editData ? (
+                        <>
+                          <TableEditButton data={editData[key]} />
+                          <TableDeleteButton data={editData[key]} />
+                        </>
+                      ) : null}
                     </Stack>
                   </TableCell>
                 </TableRow>

@@ -41,23 +41,24 @@ export default function ManagerManagementPage() {
     handleSubmit,
     register,
     formState: { errors },
+    resetField,
   } = useForm();
-  const onSubmit = async () => {
+  const onSubmit = (data) => {
     const fd = new FormData();
     fd.append("fileAvatar", image);
     fd.append("dateOfBirth", formatDate(dateOfBirth));
-    fd.append("fullname", employ.fullname);
-    fd.append("address", employ.address);
-    fd.append("phonenumber", employ.phonenumber);
-    fd.append("email", employ.email);
-    fd.append("username", employ.username);
-    fd.append("password", employ.password);
-    fd.append("cwtId", employ.cwtId);
-    fd.append("personalId", employ.personalId);
+    fd.append("fullname", data.fullname);
+    fd.append("address", data.address);
+    fd.append("phonenumber", data.phonenumber);
+    fd.append("email", data.email);
+    fd.append("username", data.username);
+    fd.append("password", data.password);
+    fd.append("cwtId", 1);
+    fd.append("personalId", data.personalId);
     fd.append("gender", disabled);
-    await dispatch(addManager(fd));
+    dispatch(addManager(fd));
     handleClose();
-    window.location.reload();
+    //window.location.reload();
   };
 
   const formatDate = (date) => {
@@ -94,36 +95,43 @@ export default function ManagerManagementPage() {
 
   // close dialog
   const handleClose = () => {
+    resetField("fullname");
+    resetField("phonenumber");
+    resetField("email");
+    resetField("address");
+    resetField("personalId");
+    resetField("username");
+    resetField("password");
     setOpen(false);
   };
   const dispatch = useDispatch();
   const employees = useSelector((state) => state.manager);
-  const [employ, setEmploy] = useState({
-    fullname: "",
-    phonenumber: "",
-    email: "",
-    address: "",
-    gender: "",
-    personalId: "",
-    cwtId: 1,
-    username: "",
-    password: "",
-  });
+  // const [employ, setEmploy] = useState({
+  //   fullname: "",
+  //   phonenumber: "",
+  //   email: "",
+  //   address: "",
+  //   gender: "",
+  //   personalId: "",
+  //   cwtId: 1,
+  //   username: "",
+  //   password: "",
+  // });
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [image, setImage] = useState("");
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   };
   const [disabled, setDisabled] = useState(false);
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setEmploy((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
-  };
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setEmploy((prevValue) => {
+  //     return {
+  //       ...prevValue,
+  //       [name]: value,
+  //     };
+  //   });
+  // };
   useEffect(() => {
     dispatch(getManagers());
   }, []);
@@ -162,8 +170,8 @@ export default function ManagerManagementPage() {
                 })}
                 error={!!errors.fullname}
                 helperText={errors.fullname?.message}
-                value={employ.fullname}
-                onChange={handleChange}
+                // value={employ.fullname}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -182,8 +190,8 @@ export default function ManagerManagementPage() {
                 })}
                 error={!!errors.email}
                 helperText={errors.email?.message}
-                value={employ.email}
-                onChange={handleChange}
+                // value={employ.email}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -198,8 +206,8 @@ export default function ManagerManagementPage() {
                 })}
                 error={!!errors.username}
                 helperText={errors.username?.message}
-                value={employ.username}
-                onChange={handleChange}
+                // value={employ.username}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -213,13 +221,13 @@ export default function ManagerManagementPage() {
                   pattern: {
                     value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/i,
                     message:
-                      "Password must have Uppercase, Lowercase, Special Char and Number Length 6",
+                      "Password must have Uppercase, Lowercase, Special Char, Number and minLength: 6",
                   },
                 })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
-                value={employ.password}
-                onChange={handleChange}
+                // value={employ.password}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -233,8 +241,8 @@ export default function ManagerManagementPage() {
                 })}
                 error={!!errors.address}
                 helperText={errors.address?.message}
-                value={employ.address}
-                onChange={handleChange}
+                // value={employ.address}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <TextField
@@ -248,8 +256,8 @@ export default function ManagerManagementPage() {
                 })}
                 error={!!errors.personalId}
                 helperText={errors.personalId?.message}
-                value={employ.personalId}
-                onChange={handleChange}
+                // value={employ.personalId}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <LocalizationProvider
@@ -280,8 +288,8 @@ export default function ManagerManagementPage() {
                 })}
                 error={!!errors.phonenumber}
                 helperText={errors.phonenumber?.message}
-                value={employ.phonenumber}
-                onChange={handleChange}
+                // value={employ.phonenumber}
+                // onChange={handleChange}
                 variant="outlined"
               />
               <FormControlLabel

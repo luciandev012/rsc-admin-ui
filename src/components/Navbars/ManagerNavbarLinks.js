@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,6 +16,8 @@ import Notifications from "@material-ui/icons/Notifications";
 import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getWarning } from "actions/warning";
 
 const useStyles = makeStyles(styles);
 
@@ -32,7 +34,12 @@ export default function ManagerNavbarLinks() {
   const handleCloseNotification = () => {
     setOpenNotification(null);
   };
-
+  const dispatch = useDispatch();
+  const warnings = useSelector((state) => state.warning);
+  console.log(warnings);
+  useEffect(() => {
+    dispatch(getWarning());
+  }, []);
   return (
     <div>
       <Button
@@ -57,7 +64,9 @@ export default function ManagerNavbarLinks() {
           className={classes.buttonLink}
         >
           <Notifications className={classes.icons} />
-          <span className={classes.notifications}>6</span>
+          <span className={classes.notifications}>
+            {warnings ? warnings.length : 0}
+          </span>
           <Hidden mdUp implementation="css">
             <p onClick={handleCloseNotification} className={classes.linkText}>
               Notification
@@ -87,42 +96,17 @@ export default function ManagerNavbarLinks() {
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseNotification}>
                   <MenuList role="menu">
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Add Employee
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Add Order
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Delete Product
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Edit Employee
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Add Inventory
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Edit Order
-                    </MenuItem>
+                    {warnings
+                      ? warnings.map((warn, index) => (
+                          <MenuItem
+                            onClick={handleCloseNotification}
+                            className={classes.dropdownItem}
+                            key={index}
+                          >
+                            {warn.productName}
+                          </MenuItem>
+                        ))
+                      : null}
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

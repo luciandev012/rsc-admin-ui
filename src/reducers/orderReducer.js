@@ -1,9 +1,9 @@
 const order = (state = [], action) => {
   switch (action.type) {
-    case "GETALL": {
+    case "GETALLORDER": {
       return action.payload;
     }
-    case "DELETE": {
+    case "DELETEORDER": {
       return state.filter((order) => order.orderId != action.payload);
     }
     default:

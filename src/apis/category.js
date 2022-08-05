@@ -10,3 +10,6 @@ export const deleteCategory = (id) =>
 
 export const updateCategory = (cate) =>
   API.post("/Product/UpdateCategory", cate);
+
+export const getSubcategoryById = (id) =>
+  API.get(`/Product/GetAllSubCategoriesByCategoryId?id=${id}`);

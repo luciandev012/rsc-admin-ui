@@ -25,15 +25,16 @@ export function TableEditButton({ data }) {
     const putData = {
       exportId: data.exportId,
       managementId: JSON.parse(localStorage.user).id,
-      exportDetailModelViews: [
-        {
-          exportDetailId: data.exportDetailId,
-          exportId: data.exportId,
-          price: exportNote.price,
-          quanlity: exportNote.quanlity,
-          productId: data.productId,
-        },
-      ],
+      description: data.description,
+      exportDetailModelViews: exportNote.map((exp) => {
+        return {
+          exportDetailId: exp.exportDetailId,
+          exportId: exp.exportId,
+          price: exp.price,
+          quanlity: exp.quanlity,
+          productId: exp.productId,
+        };
+      }),
     };
     dispatch(updateExportNote(putData));
     handleCloseEdit();
@@ -43,15 +44,15 @@ export function TableEditButton({ data }) {
   const dispatch = useDispatch();
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [exportNote, setExportNote] = React.useState(data);
-  const handleChange = (event) => {
+  const [exportNote, setExportNote] = React.useState(data.exportDetails);
+  React.useEffect(() => {
+    setExportNote(data.exportDetails);
+  }, [data]);
+  const handleChange = (event, index) => {
     const { name, value } = event.target;
-    setExportNote((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    const list = [...exportNote];
+    list[index][name] = value;
+    setExportNote(list);
   };
 
   const handleClickOpenEdit = () => {
@@ -85,28 +86,34 @@ export function TableEditButton({ data }) {
         <form>
           <DialogTitle>Edit</DialogTitle>
           <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="price"
-              label="Price"
-              type="text"
-              name="price"
-              value={exportNote.price}
-              onChange={handleChange}
-              variant="outlined"
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="quantity"
-              label="Quantity"
-              type="text"
-              name="quanlity"
-              value={exportNote.quanlity}
-              onChange={handleChange}
-              variant="outlined"
-            />
+            {exportNote
+              ? exportNote.map((exp, index) => (
+                  <div key={index}>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="price"
+                      label="Price"
+                      type="text"
+                      name="price"
+                      value={exp.price}
+                      onChange={(e) => handleChange(e, index)}
+                      variant="outlined"
+                    />
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="quantity"
+                      label="Quantity"
+                      type="text"
+                      name="quanlity"
+                      value={exp.quanlity}
+                      onChange={(e) => handleChange(e, index)}
+                      variant="outlined"
+                    />
+                  </div>
+                ))
+              : null}
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>

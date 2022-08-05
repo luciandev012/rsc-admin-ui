@@ -261,12 +261,11 @@ export default function ExportManagementPage() {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "ProductId", "Quantity", "Price", "Actions"]}
+              tableHead={["ID", "Export date", "Description", "Actions"]}
               tableData={exports.map((imp) => [
                 imp.exportId,
-                imp.productId,
-                imp.quanlity,
-                imp.price,
+                imp.exportDate,
+                imp.description,
               ])}
               editData={exports}
             />

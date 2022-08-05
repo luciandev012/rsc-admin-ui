@@ -14,16 +14,16 @@ export const addUnit = (unit) => async (dispatch) => {
   const { status } = await api.createUnit(unit);
   //console.log("data", data);
   if (status == 200) {
-    dispatch({ type: "CREATE", payload: unit });
+    dispatch({ type: "CREATEUNIT", payload: unit });
   }
 };
 
 export const updateUnit = (unit) => async (dispatch) => {
   await api.updateUnit(unit);
-  dispatch({ type: "UPDATE", payload: unit });
+  dispatch({ type: "UPDATEUNIT", payload: unit });
 };
 
 export const deleteUnit = (id) => async (dispatch) => {
   await api.deleteUnit(id);
-  dispatch({ type: "DELETE", payload: id });
+  dispatch({ type: "DELETEUNIT", payload: id });
 };

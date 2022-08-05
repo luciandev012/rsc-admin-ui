@@ -12,18 +12,18 @@ export const getAllBrand = () => async (dispatch) => {
 export const addBrand = (brand) => async (dispatch) => {
   const { status } = await api.createBrand(brand);
   if (status == 200) {
-    dispatch({ type: "CREATE", payload: brand });
+    dispatch({ type: "CREATEBRAND", payload: brand });
   }
 };
 
 export const updateBrand = (brand) => async (dispatch) => {
   await api.updateBrand(brand);
   console.log(brand);
-  dispatch({ type: "UPDATE", payload: brand });
+  dispatch({ type: "UPDATEBRAND", payload: brand });
   //getAllBrand();
 };
 
 export const deleteBrand = (id) => async (dispatch) => {
   await api.deleteBrand(id);
-  dispatch({ type: "DELETE", payload: id });
+  dispatch({ type: "DELETEBRAND", payload: id });
 };

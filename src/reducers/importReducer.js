@@ -1,9 +1,9 @@
 const importNote = (state = [], action) => {
   switch (action.type) {
-    case "GETALL": {
+    case "GETALLIMP": {
       return action.payload;
     }
-    case "DELETE": {
+    case "DELETEIMP": {
       return state.filter((imp) => imp.importNoteId != action.payload);
     }
     default:

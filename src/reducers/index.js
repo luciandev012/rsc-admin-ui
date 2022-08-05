@@ -12,7 +12,7 @@ import exportP from "./exportReducer";
 import revenue from "./revenueReducer";
 import customer from "./customerReducer";
 import manager from "./managerReducer";
-
+import warning from "./warningReducer";
 const allReducers = combineReducers({
   brand,
   product,
@@ -27,6 +27,7 @@ const allReducers = combineReducers({
   revenue,
   customer,
   manager,
+  warning,
 });
 
 export default allReducers;

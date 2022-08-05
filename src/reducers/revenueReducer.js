@@ -1,6 +1,6 @@
 const revenue = (state = [], action) => {
   switch (action.type) {
-    case "GETALL": {
+    case "GETALLREVENUE": {
       return action.payload;
     }
     case "GETBYDATE": {

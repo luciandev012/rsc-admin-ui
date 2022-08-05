@@ -2,7 +2,7 @@ const product = (state = [], action) => {
   switch (action.type) {
     case "GETPRODUCTS":
       return action.payload;
-    case "DELETE": {
+    case "DELETEPRODUCT": {
       return state.filter((product) => product.productId != action.payload);
     }
     default:

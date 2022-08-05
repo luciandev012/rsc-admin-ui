@@ -1,9 +1,9 @@
 const manager = (state = [], action) => {
   switch (action.type) {
-    case "GETALL": {
+    case "GETALLMAN": {
       return action.payload;
     }
-    case "DELETE": {
+    case "DELETEMAN": {
       return state.filter((manager) => manager.id != action.payload);
     }
     default:
