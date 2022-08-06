@@ -25,6 +25,11 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import LoginPageStyle from "assets/jss/material-dashboard-react/views/loginPageStyle.js";
 import axiosIntance from "../../helper/axios";
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
+import "react-notifications/lib/notifications.css";
 
 // const { REACT_APP_SERVER_URL } = process.env;
 // validation
@@ -60,7 +65,10 @@ class LoginPage extends React.Component {
           localStorage.clear();
           localStorage.setItem("user", JSON.stringify(rest));
           localStorage.setItem("token", token);
-          return history.push("/manager");
+          NotificationManager.success("Login success!", "Notification", 1000);
+          setTimeout(() => {
+            return history.push("/manager");
+          }, 1500);
         } else {
           alert("Incorrect password");
         }
@@ -140,6 +148,7 @@ class LoginPage extends React.Component {
                   </div>
                 </CardHeader>
                 <CardBody>
+                  <NotificationContainer />
                   <p
                     className={`${classes.textCenter} ${classes.checkboxLabel}`}
                   ></p>
