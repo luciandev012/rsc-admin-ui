@@ -43,7 +43,7 @@ export default function ManagerManagementPage() {
     formState: { errors },
     resetField,
   } = useForm();
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const fd = new FormData();
     fd.append("fileAvatar", image);
     fd.append("dateOfBirth", formatDate(dateOfBirth));
@@ -56,9 +56,9 @@ export default function ManagerManagementPage() {
     fd.append("cwtId", 1);
     fd.append("personalId", data.personalId);
     fd.append("gender", disabled);
-    dispatch(addManager(fd));
+    await dispatch(addManager(fd));
     handleClose();
-    //window.location.reload();
+    window.location.reload();
   };
 
   const formatDate = (date) => {
