@@ -23,51 +23,33 @@ import * as api from "../../apis/product";
 
 export function TableEditButton({ data }) {
   // validation
-  const { handleSubmit } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setValue,
+  } = useForm();
   //console.log(data);
 
   //console.log(errors);
 
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [product, setProduct] = React.useState({
-    productName: data.productName,
-    productCode: data.productCode,
-    productDescribe: data.productDescribe,
-    price: data.price,
-    quantity: data.quantity,
-    discountId: data.discountId,
-    subCategoryId: data.subCategoryId,
-    unitId: data.unitId,
-    categoryId: data.categoryId,
-  });
   const [image, setImage] = React.useState("");
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   };
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setProduct((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
-  };
   const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
-    setProduct({
-      productName: data.productName,
-      productCode: data.productCode,
-      productDescribe: data.productDescribe,
-      price: data.price,
-      quantity: data.quantity,
-      discountId: data.discountId,
-      subCategoryId: data.subCategoryId,
-      unitId: data.unitId,
-      categoryId: data.categoryId,
-    });
+    setValue("productName", data.productName);
+    setValue("productCode", data.productCode);
+    setValue("price", data.price);
+    setValue("quantity", data.quantity);
+    setValue("unitId", data.unitId);
+    setValue("subCategoryId", data.subCategoryId);
+    setValue("brandId", data.brandId);
+    setValue("productDescribe", data.productDescribe);
     setOpenDialogEdit(true);
   };
 
@@ -75,16 +57,18 @@ export function TableEditButton({ data }) {
     setOpenDialogEdit(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (pData) => {
     const fd = new FormData();
     fd.append("files", image);
-    fd.append("productName", product.productName);
-    fd.append("productCode", product.productCode);
-    fd.append("price", product.price);
-    fd.append("quantity", product.quantity);
-    fd.append("unitId", product.unitId);
-    fd.append("subCategoryId", product.subCategoryId);
+    fd.append("productName", pData.productName);
+    fd.append("productCode", pData.productCode);
+    fd.append("price", pData.price);
+    fd.append("quantity", pData.quantity);
+    fd.append("unitId", pData.unitId);
+    fd.append("subCategoryId", pData.subCategoryId);
     fd.append("productId", data.productId);
+    fd.append("brandId", pData.brandId);
+    fd.append("productDescribe", data.productDescribe);
     dispatch(updateProduct(fd));
     handleCloseEdit();
   };
@@ -117,9 +101,11 @@ export function TableEditButton({ data }) {
               label="Product Name"
               type="text"
               name="productName"
-              value={product.productName}
-              onChange={handleChange}
-              variant="outlined"
+              {...register("productName", {
+                required: "Product name is required.",
+              })}
+              error={!!errors.productName}
+              helperText={errors.productName?.message}
             />
             <TextField
               margin="dense"
@@ -127,8 +113,11 @@ export function TableEditButton({ data }) {
               label="Product Code"
               type="text"
               name="productCode"
-              value={product.productCode}
-              onChange={handleChange}
+              {...register("productCode", {
+                required: "Product code is required.",
+              })}
+              error={!!errors.productCode}
+              helperText={errors.productCode?.message}
               variant="outlined"
             />
             <TextField
@@ -137,8 +126,11 @@ export function TableEditButton({ data }) {
               label="Product Describe"
               type="text"
               name="productDescribe"
-              value={product.productDescribe}
-              onChange={handleChange}
+              {...register("productDescribe", {
+                required: "Product describe is required.",
+              })}
+              error={!!errors.productDescribe}
+              helperText={errors.productDescribe?.message}
               variant="outlined"
             />
             <TextField
@@ -147,8 +139,11 @@ export function TableEditButton({ data }) {
               label="Price"
               type="text"
               name="price"
-              value={product.price}
-              onChange={handleChange}
+              {...register("price", {
+                required: "Price is required.",
+              })}
+              error={!!errors.price}
+              helperText={errors.price?.message}
               variant="outlined"
             />
             <TextField
@@ -157,28 +152,55 @@ export function TableEditButton({ data }) {
               label="Quantity"
               type="text"
               name="quantity"
-              value={product.quantity}
-              onChange={handleChange}
+              {...register("quantity", {
+                required: "Price is required.",
+              })}
+              error={!!errors.quantity}
+              helperText={errors.quantity?.message}
+              // value={product.quantity}
+              // onChange={handleChange}
               variant="outlined"
             />
             <TextField
+              autoFocus
               margin="dense"
               id="unitId"
               label="Unit Id"
               type="text"
               name="unitId"
-              value={product.unitId}
-              onChange={handleChange}
+              {...register("unitId", {
+                required: "Unit id is required.",
+              })}
+              error={!!errors.unitId}
+              helperText={errors.unitId?.message}
               variant="outlined"
             />
             <TextField
+              autoFocus
               margin="dense"
               id="subCategoryId"
               label="Sub Category Id"
               type="text"
               name="subCategoryId"
-              value={product.subCategoryId}
-              onChange={handleChange}
+              {...register("subCategoryId", {
+                required: "Sub category is required.",
+              })}
+              error={!!errors.subCategoryId}
+              helperText={errors.subCategoryId?.message}
+              variant="outlined"
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="brandId"
+              label="Brand Id"
+              type="text"
+              name="brandId"
+              {...register("brandId", {
+                required: "Brand Id is required.",
+              })}
+              error={!!errors.brandId}
+              helperText={errors.brandId?.message}
               variant="outlined"
             />
             <label htmlFor="upload-photo">

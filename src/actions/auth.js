@@ -5,3 +5,4 @@ export const getManager = (id) => async (dispatch) => {
   //console.log(data);
   dispatch({ type: "GET", payload: data });
 };
+

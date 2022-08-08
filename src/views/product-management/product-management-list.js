@@ -48,6 +48,7 @@ export default function ProductManagementPage() {
     fd.append("unitId", data.unitId);
     fd.append("subCategoryId", data.subCategoryId);
     fd.append("productId", 1);
+    fd.append("brandId", data.brandId);
     dispatch(addProduct(fd));
     handleClose();
   };
@@ -82,6 +83,7 @@ export default function ProductManagementPage() {
     resetField("quantity");
     resetField("unitId");
     resetField("subCategoryId");
+    resetField("brandId");
     setOpen(false);
   };
 
@@ -212,6 +214,20 @@ export default function ProductManagementPage() {
                 })}
                 error={!!errors.subCategoryId}
                 helperText={errors.subCategoryId?.message}
+                variant="outlined"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="brandId"
+                label="Brand Id"
+                type="text"
+                name="brandId"
+                {...register("brandId", {
+                  required: "Brand Id is required.",
+                })}
+                error={!!errors.brandId}
+                helperText={errors.brandId?.message}
                 variant="outlined"
               />
               <label htmlFor="upload-photo">

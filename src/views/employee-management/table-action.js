@@ -25,7 +25,12 @@ import { updateEmployee } from "actions/employee";
 
 export function TableEditButton({ data }) {
   // validation
-  const { handleSubmit } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setValue,
+  } = useForm();
   //console.log(data);
 
   //console.log(errors);
@@ -33,43 +38,38 @@ export function TableEditButton({ data }) {
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
   const dispatch = useDispatch();
-  const [employ, setEmploy] = React.useState(data);
-  const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
+  const [dateOfBirth, setDateOfBirth] = React.useState(data.dateofbirth);
   const [image, setImage] = React.useState("");
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   };
   const [disabled, setDisabled] = React.useState(false);
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setEmploy((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
-  };
 
   const handleClickOpenEdit = () => {
+    setValue("fullname", data.fullname);
+    setValue("email", data.email);
+    setValue("address", data.address);
+    setValue("personalId", data.personalId);
+    setValue("phonenumber", data.phonenumber);
+    setDateOfBirth(data.dateofbirth);
     setOpenDialogEdit(true);
   };
 
   const handleCloseEdit = () => {
-    setEmploy(data);
     setOpenDialogEdit(false);
   };
 
-  const onSubmit = () => {
+  const onSubmit = (pData) => {
     const fd = new FormData();
     fd.append("fileAvatar", image);
-    fd.append("id", employ.id);
+    fd.append("id", data.id);
     fd.append("dateOfBirth", formatDate(dateOfBirth));
-    fd.append("fullname", employ.fullname);
-    fd.append("address", employ.address);
-    fd.append("phonenumber", employ.phonenumber);
-    fd.append("email", employ.email);
+    fd.append("fullname", pData.fullname);
+    fd.append("address", pData.address);
+    fd.append("phonenumber", pData.phonenumber);
+    fd.append("email", pData.email);
     fd.append("cwtId", 1);
-    fd.append("personalId", employ.personalId);
+    fd.append("personalId", pData.personalId);
     fd.append("gender", disabled);
     dispatch(updateEmployee(fd));
     handleCloseEdit();
@@ -117,8 +117,11 @@ export function TableEditButton({ data }) {
               label="Full name"
               type="text"
               name="fullname"
-              value={employ.fullname}
-              onChange={handleChange}
+              {...register("fullname", {
+                required: "Full name is required.",
+              })}
+              error={!!errors.fullname}
+              helperText={errors.fullname?.message}
               variant="outlined"
             />
             <TextField
@@ -128,8 +131,15 @@ export function TableEditButton({ data }) {
               label="Email"
               type="text"
               name="email"
-              value={employ.email}
-              onChange={handleChange}
+              {...register("email", {
+                required: "Email is required.",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
+              error={!!errors.email}
+              helperText={errors.email?.message}
               variant="outlined"
             />
             <TextField
@@ -138,8 +148,11 @@ export function TableEditButton({ data }) {
               label="Address"
               type="text"
               name="address"
-              value={employ.address}
-              onChange={handleChange}
+              {...register("address", {
+                required: "Address is required.",
+              })}
+              error={!!errors.address}
+              helperText={errors.address?.message}
               variant="outlined"
             />
             <TextField
@@ -148,8 +161,11 @@ export function TableEditButton({ data }) {
               label="Personal Id"
               type="text"
               name="personalId"
-              value={employ.personalId}
-              onChange={handleChange}
+              {...register("personalId", {
+                required: "PersonalId is required.",
+              })}
+              error={!!errors.personalId}
+              helperText={errors.personalId?.message}
               variant="outlined"
             />
             <LocalizationProvider className="date" dateAdapter={AdapterDateFns}>
@@ -168,8 +184,15 @@ export function TableEditButton({ data }) {
               label="Phone number"
               type="text"
               name="phonenumber"
-              value={employ.phonenumber}
-              onChange={handleChange}
+              {...register("phonenumber", {
+                required: "Phone number is required.",
+                pattern: {
+                  value: /^[0-9]{10,}$/i,
+                  message: "Invalid phone number",
+                },
+              })}
+              error={!!errors.phonenumber}
+              helperText={errors.phonenumber?.message}
               variant="outlined"
             />
             <FormControlLabel

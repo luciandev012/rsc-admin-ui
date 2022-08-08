@@ -4,3 +4,7 @@ export const getManager = (id) => axios.get(`/Manager/GetManager?id=${id}`);
 
 export const changePassword = (model) =>
   axios.post("/Account/ChangePassword", model);
+
+export const changeAdminPassword = (model) => {
+  axios.post("/Admin/ChangePassword", model);
+};

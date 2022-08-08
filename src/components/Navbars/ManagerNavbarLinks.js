@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getWarning } from "actions/warning";
+import axiosIntance from "helper/axios";
 
 const useStyles = makeStyles(styles);
 
@@ -39,24 +40,26 @@ export default function ManagerNavbarLinks() {
     resetField,
   } = useForm();
   const onSubmit = async (pData) => {
-    // if (pData.newPassword === pData.cfPassword) {
-    //   const changeModel = {
-    //     phonenumber: user.phonenumber,
-    //     oldPassword: pData.oldPassword,
-    //     newPassword: pData.newPassword,
-    //   };
-    //   const { data } = await api.changePassword(changeModel);
-    //   //console.log(data);
-    //   if (data != true) {
-    //     alert(data);
-    //   } else {
-    //     alert("Change password successfully!");
-    //   }
-    //   handleClose();
-    // } else {
-    //   alert("Confirm password not match new password!");
-    // }
-    console.log(pData);
+    if (pData.newPassword === pData.cfPassword) {
+      const changeModel = {
+        oldPassword: pData.oldPassword,
+        newPassword: pData.newPassword,
+      };
+      axiosIntance
+        .post("/Admin/ChangePassword", changeModel)
+        .then((result) => {
+          if (result.data != true) {
+            alert("Change password failed: " + result.data);
+          } else {
+            alert("Change password successfully!");
+            handleClose();
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      alert("Confirm password not match new password!");
+    }
+    //console.log(pData);
   };
   const classes = useStyles();
   const [openProfile, setOpenProfile] = React.useState(null);
