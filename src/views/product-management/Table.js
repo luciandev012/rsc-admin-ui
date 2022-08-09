@@ -87,7 +87,7 @@ export default function CustomTable(props) {
                 // Attribute
                 <TableRow hover key={fkey} className={classes.tableBodyRow}>
                   {prop.map((prop, key) => {
-                    if (key != 4) {
+                    if (key != 3) {
                       return (
                         <TableCell
                           className={classes.tableCell}

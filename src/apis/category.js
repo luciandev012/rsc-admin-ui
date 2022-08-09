@@ -13,3 +13,7 @@ export const updateCategory = (cate) =>
 
 export const getSubcategoryById = (id) =>
   API.get(`/Product/GetAllSubCategoriesByCategoryId?id=${id}`);
+
+export const getAllSubCate = () => {
+  API.get("/Product/GetAllSubcategories");
+};
