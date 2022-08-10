@@ -14,11 +14,19 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { PropTypes } from "prop-types";
+import Select from "@mui/material/Select";
+import { MenuItem } from "@mui/material";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 // validation
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux/es/exports";
+import { useDispatch, useSelector } from "react-redux/es/exports";
 import { deleteProduct, updateProduct } from "actions/product";
 import AddIcon from "@material-ui/icons/Add";
+import { getAllUnit } from "actions/unit";
+import { getAllSubCate } from "actions/subcate";
+import { getAllDiscount } from "actions/discount";
 import * as api from "../../apis/product";
 
 export function TableEditButton({ data }) {
@@ -35,6 +43,26 @@ export function TableEditButton({ data }) {
 
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
+  const units = useSelector((state) => state.unit);
+  const subcates = useSelector((state) => state.subcate);
+  const discounts = useSelector((state) => state.discount);
+  const [unitId, setUnitId] = React.useState(data.unitId);
+  const [subCateId, setSubCateId] = React.useState(data.subCategoryId);
+  const [discountId, setDiscountId] = React.useState(data.discountId);
+  React.useEffect(() => {
+    dispatch(getAllUnit());
+    dispatch(getAllSubCate());
+    dispatch(getAllDiscount());
+  }, []);
+  const handleChangeUnit = (event) => {
+    setUnitId(event.target.value);
+  };
+  const handleChangeSubcate = (event) => {
+    setSubCateId(event.target.value);
+  };
+  const handleChangeDiscount = (event) => {
+    setDiscountId(event.target.value);
+  };
   const [image, setImage] = React.useState("");
   const handleImage = (e) => {
     setImage(e.target.files[0]);
@@ -46,9 +74,6 @@ export function TableEditButton({ data }) {
     setValue("productCode", data.productCode);
     setValue("price", data.price);
     setValue("quantity", data.quantity);
-    setValue("unitId", data.unitId);
-    setValue("subCategoryId", data.subCategoryId);
-    setValue("brandId", data.brandId);
     setValue("productDescribe", data.productDescribe);
     setOpenDialogEdit(true);
   };
@@ -64,10 +89,10 @@ export function TableEditButton({ data }) {
     fd.append("productCode", pData.productCode);
     fd.append("price", pData.price);
     fd.append("quantity", pData.quantity);
-    fd.append("unitId", pData.unitId);
-    fd.append("subCategoryId", pData.subCategoryId);
+    fd.append("unitId", unitId);
+    fd.append("subCategoryId", subCateId);
+    fd.append("discountId", discountId);
     fd.append("productId", data.productId);
-    fd.append("brandId", pData.brandId);
     fd.append("productDescribe", data.productDescribe);
     dispatch(updateProduct(fd));
     handleCloseEdit();
@@ -161,48 +186,6 @@ export function TableEditButton({ data }) {
               // onChange={handleChange}
               variant="outlined"
             />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="unitId"
-              label="Unit Id"
-              type="text"
-              name="unitId"
-              {...register("unitId", {
-                required: "Unit id is required.",
-              })}
-              error={!!errors.unitId}
-              helperText={errors.unitId?.message}
-              variant="outlined"
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="subCategoryId"
-              label="Sub Category Id"
-              type="text"
-              name="subCategoryId"
-              {...register("subCategoryId", {
-                required: "Sub category is required.",
-              })}
-              error={!!errors.subCategoryId}
-              helperText={errors.subCategoryId?.message}
-              variant="outlined"
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="brandId"
-              label="Brand Id"
-              type="text"
-              name="brandId"
-              {...register("brandId", {
-                required: "Brand Id is required.",
-              })}
-              error={!!errors.brandId}
-              helperText={errors.brandId?.message}
-              variant="outlined"
-            />
             <label htmlFor="upload-photo">
               <input
                 style={{ display: "none" }}
@@ -221,6 +204,90 @@ export function TableEditButton({ data }) {
                 <AddIcon /> Upload photo
               </Fab>
             </label>
+            <div style={{ display: "flex", marginTop: "20px" }}>
+              <Box sm={{ minWidth: 120 }} style={{ width: "100px" }}>
+                <FormControl>
+                  <InputLabel id="demo-simple-select-label">Unit</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={unitId}
+                    label="Unit"
+                    name="unitId"
+                    onChange={handleChangeUnit}
+                  >
+                    {units
+                      ? units.map((unit, key) => (
+                          <MenuItem
+                            value={unit.unitId}
+                            name={unit.name}
+                            key={key}
+                          >
+                            {unit.name}
+                          </MenuItem>
+                        ))
+                      : null}
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box sm={{ minWidth: 120 }} style={{ width: "100px" }}>
+                <FormControl>
+                  <InputLabel id="demo-simple-select-label">
+                    Subcategory
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={subCateId}
+                    label="Subcategory"
+                    name="subCateId"
+                    onChange={handleChangeSubcate}
+                  >
+                    {subcates
+                      ? subcates.map((sub, key) => (
+                          <MenuItem
+                            value={sub.subCategoryId}
+                            name={sub.subCategoryName}
+                            key={key}
+                          >
+                            {sub.subCategoryName}
+                          </MenuItem>
+                        ))
+                      : null}
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box
+                sm={{ minWidth: 120 }}
+                style={{ width: "100px", paddingLeft: "50px" }}
+              >
+                <FormControl>
+                  <InputLabel id="demo-simple-select-label">
+                    Discount
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={discountId}
+                    label="Discount"
+                    name="discountId"
+                    onChange={handleChangeDiscount}
+                  >
+                    {discounts
+                      ? discounts.map((dis, key) => (
+                          <MenuItem
+                            value={dis.discountId}
+                            name={dis.discountName}
+                            key={key}
+                          >
+                            {dis.discountName}
+                          </MenuItem>
+                        ))
+                      : null}
+                  </Select>
+                </FormControl>
+              </Box>
+            </div>
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>

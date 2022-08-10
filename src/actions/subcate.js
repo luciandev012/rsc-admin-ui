@@ -1,7 +1,11 @@
-import * as api from "../apis/category";
+import axios from "../helper/axios";
 
 export const getAllSubCate = () => async (dispatch) => {
-  const res = await api.getAllSubCate();
-  console.log(res);
-  dispatch({ type: "GETALLSUBCATE", payload: res });
+  axios
+    .get("/Product/GetAllSubcategories")
+    .then((result) => {
+      //console.log(result);
+      dispatch({ type: "GETALLSUBCATE", payload: result.data });
+    })
+    .catch((err) => console.log(err));
 };

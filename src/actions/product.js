@@ -21,10 +21,7 @@ export const addProduct = (form) => async (dispatch) => {
 
 export const updateProduct = (form) => async (dispatch) => {
   const res = await api.updateProduct(form);
-  if (res.data.length < 3) {
-    alert("Update product fail: " + res.data[0] + " " + res.data[1]);
-  } else {
-    const { data } = await api.getAllProducts();
-    dispatch({ type: "GETPRODUCTS", payload: data });
-  }
+  console.log(res);
+  const { data } = await api.getAllProducts();
+  dispatch({ type: "GETPRODUCTS", payload: data });
 };
