@@ -14,14 +14,46 @@ import TableCell from "@material-ui/core/TableCell";
 // import Close from "@material-ui/icons/Close";
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
-import { TableDeleteButton, TableEditButton } from "./table-action";
+import { BillButton, TableDeleteButton, TableEditButton } from "./table-action";
 import Stack from "@mui/material/Stack";
+import moment from "moment";
+
+// show information
+import Slide from "@mui/material/Slide";
+import Dialog from "@mui/material/Dialog";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
+// import Button from "@mui/material/Button";
+import ListItemText from "@mui/material/ListItemText";
+import ListItem from "@mui/material/ListItem";
+import List from "@mui/material/List";
+
+// import Divider from "@mui/material/Divider";
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor, editData } = props;
+
+  // show information
+  const [openShowInformation, setOpenShowInformation] = React.useState(false);
+
+  const handleClickOpenShowInformation = (key) => {
+    setDetail(editData[key]);
+    setOpenShowInformation(true);
+  };
+  const [detail, setDetail] = React.useState({});
+  const handleCloseShowInformation = () => {
+    setOpenShowInformation(false);
+  };
+
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -47,37 +79,46 @@ export default function CustomTable(props) {
         ) : null}
         {tableData !== undefined ? (
           <TableBody>
-            {tableData.map((prop, key) => {
+            {tableData.map((prop, fkey) => {
               return (
                 // Attribute
-                <TableRow key={key} className={classes.tableBodyRow}>
+                <TableRow hover key={fkey} className={classes.tableBodyRow}>
                   {prop.map((prop, key) => {
                     if (key != 2) {
                       return (
-                        <TableCell className={classes.tableCell} key={key}>
+                        <TableCell
+                          className={classes.tableCell}
+                          key={key}
+                          onClick={() => handleClickOpenShowInformation(fkey)}
+                        >
                           {prop}
                         </TableCell>
                       );
                     } else {
                       return (
-                        <TableCell className={classes.tableCell} key={key}>
+                        <TableCell
+                          className={classes.tableCell}
+                          key={key}
+                          onClick={() => handleClickOpenShowInformation(fkey)}
+                        >
                           {prop == 3
-                            ? "Received and paid"
+                            ? "Ðã nh?n và thanh toán"
                             : prop == 2
-                            ? "Confirmed"
+                            ? "Ðã xác nh?n"
                             : prop == 1
-                            ? "Approved"
-                            : "Cancel order"}
+                            ? "Ðã duy?t"
+                            : "H?y don hàng"}
                         </TableCell>
                       );
                     }
                   })}
 
                   {/* Actions */}
-                  <TableCell className={classes.tableCell} key={key}>
+                  <TableCell className={classes.tableCell} key={fkey}>
                     <Stack direction="row" spacing={0.5}>
-                      <TableEditButton data={editData[key]} />
-                      <TableDeleteButton data={editData[key]} />
+                      <TableDeleteButton data={editData[fkey]} />
+                      <TableEditButton data={editData[fkey]} />
+                      <BillButton data={editData[fkey]} />
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -86,13 +127,17 @@ export default function CustomTable(props) {
           </TableBody>
         ) : (
           <TableBody>
-            {tableData.map((prop, key) => {
+            {tableData.map((prop, fkey) => {
               return (
                 // Attribute
-                <TableRow key={key} className={classes.tableBodyRow}>
+                <TableRow key={fkey} className={classes.tableBodyRow}>
                   {prop.map((prop, key) => {
                     return (
-                      <TableCell className={classes.tableCell} key={key}>
+                      <TableCell
+                        className={classes.tableCell}
+                        key={key}
+                        onClick={() => handleClickOpenShowInformation(fkey)}
+                      >
                         {prop}
                       </TableCell>
                     );
@@ -103,6 +148,58 @@ export default function CustomTable(props) {
           </TableBody>
         )}
       </Table>
+
+      {/* show information */}
+      <Dialog
+        fullScreen
+        open={openShowInformation}
+        onClose={handleCloseShowInformation}
+        TransitionComponent={Transition}
+      >
+        <AppBar sx={{ position: "relative" }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleCloseShowInformation}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Thông tin don hàng
+            </Typography>
+          </Toolbar>
+        </AppBar>
+
+        <List>
+          <ListItem>
+            <ListItemText
+              primary="Ngày t?o"
+              secondary={moment(detail.dateCreate).format("DD MMM YYYY")}
+            />
+          </ListItem>
+
+          <ListItem>
+            <ListItemText
+              primary="Tr?ng thái"
+              secondary={
+                detail.status == 3
+                  ? "Ðã nh?n và thanh toán"
+                  : detail.status == 2
+                  ? "Ðã xác nh?n"
+                  : detail.status == 1
+                  ? "Ðã duy?t"
+                  : "H?y don hàng"
+              }
+            />
+          </ListItem>
+
+          <ListItem>
+            <ListItemText primary="T?ng giá" secondary={detail.totalPrice} />
+          </ListItem>
+        </List>
+      </Dialog>
     </div>
   );
 }

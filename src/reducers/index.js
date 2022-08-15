@@ -14,6 +14,7 @@ import customer from "./customerReducer";
 import manager from "./managerReducer";
 import warning from "./warningReducer";
 import subcate from "./subcategoryReducer";
+import bill from "./billReducer";
 const allReducers = combineReducers({
   brand,
   product,
@@ -30,6 +31,7 @@ const allReducers = combineReducers({
   manager,
   warning,
   subcate,
+  bill,
 });
 
 export default allReducers;
