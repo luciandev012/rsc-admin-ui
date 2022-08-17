@@ -14,3 +14,6 @@ export const getQRCode = (id) =>
 
 export const getBarCode = (id) =>
   API.post(`/Product/CreateBarCodeProduct?id=${id}`);
+
+export const getProductById = (id) =>
+  API.get(`/Product/GetProductById?id=${id}`);

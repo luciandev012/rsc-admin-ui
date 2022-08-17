@@ -1,6 +1,6 @@
 import API from "../helper/axios";
 
-export const getAllOrder = () => API.get("/Order/GetAllOrder");
+export const getAllOrder = () => API.get("/Order/GetAllOrderIncludeOderDetail");
 
 export const deleteOrder = (id) => API.delete(`/Order/DeleteOder?id=${id}`);
 

@@ -31,7 +31,7 @@ export default function OrderManagementPage() {
           <CardBody>
             <Table
               tableHeaderColor="warning"
-              tableHead={["ID", "Ng�y t?o", "Tr?ng th�i", "T?ng gi�", ""]}
+              tableHead={["ID", "Ngày tạo", "Trạng thái", "Tổng giá", ""]}
               tableData={orders.map((order) => [
                 order.orderId,
                 moment(order.dateCreate).format("MM/DD/YYYY"),

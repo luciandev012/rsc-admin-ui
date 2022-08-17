@@ -102,12 +102,12 @@ export default function CustomTable(props) {
                           onClick={() => handleClickOpenShowInformation(fkey)}
                         >
                           {prop == 3
-                            ? "–„ nh?n v‡ thanh to·n"
+                            ? "ƒê√£ nh·∫≠n v√† thanh to√°n"
                             : prop == 2
-                            ? "–„ x·c nh?n"
+                            ? "ƒê√£ x√°c nh·∫≠n"
                             : prop == 1
-                            ? "–„ duy?t"
-                            : "H?y don h‡ng"}
+                            ? "ƒê√£ duy·ªát"
+                            : "H·ªßy ƒë∆°n h√†ng"}
                         </TableCell>
                       );
                     }
@@ -167,7 +167,7 @@ export default function CustomTable(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              ThÙng tin don h‡ng
+              Th√¥ng tin
             </Typography>
           </Toolbar>
         </AppBar>
@@ -175,28 +175,28 @@ export default function CustomTable(props) {
         <List>
           <ListItem>
             <ListItemText
-              primary="Ng‡y t?o"
-              secondary={moment(detail.dateCreate).format("DD MMM YYYY")}
+              primary="Ng√†y t·∫°o"
+              secondary={moment(detail.dateCreate).format("MM/DD/YYYY")}
             />
           </ListItem>
 
           <ListItem>
             <ListItemText
-              primary="Tr?ng th·i"
+              primary="Tr·∫°ng th√°i"
               secondary={
                 detail.status == 3
-                  ? "–„ nh?n v‡ thanh to·n"
+                  ? "ƒê√£ nh·∫≠n v√† thanh to√°n"
                   : detail.status == 2
-                  ? "–„ x·c nh?n"
+                  ? "ƒê√£ x√°c nh·∫≠n"
                   : detail.status == 1
-                  ? "–„ duy?t"
-                  : "H?y don h‡ng"
+                  ? "ƒê√£ duy·ªát"
+                  : "H·ªßy ƒë∆°n h√†ng"
               }
             />
           </ListItem>
 
           <ListItem>
-            <ListItemText primary="T?ng gi·" secondary={detail.totalPrice} />
+            <ListItemText primary="T·ªïng gi√°" secondary={detail.totalPrice} />
           </ListItem>
         </List>
       </Dialog>
