@@ -17,3 +17,6 @@ export const getBarCode = (id) =>
 
 export const getProductById = (id) =>
   API.get(`/Product/GetProductById?id=${id}`);
+
+export const getAllProductByCategory = (id) =>
+  API.get(`/Product/GetAllProductbCategory?id=${id}`);

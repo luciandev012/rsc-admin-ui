@@ -19,6 +19,7 @@ import ImportManagementPage from "views/import-management/import";
 import ExportManagementPage from "views/export-management/export";
 import CustomerManagementPage from "views/customer-management/customer";
 import ManagerManagementPage from "views/manager-management/manager";
+import DishManagementPage from "views/brand-management/brand-management-list";
 
 const dashboardRoutes = [
   {
@@ -26,6 +27,13 @@ const dashboardRoutes = [
     name: "Employee Management",
     icon: AssignmentIndIcon,
     component: EmployeeManagementPage,
+    layout: "/manager",
+  },
+  {
+    path: "/dish-management",
+    name: "Dish Management",
+    icon: AssignmentIndIcon,
+    component: DishManagementPage,
     layout: "/manager",
   },
   {
