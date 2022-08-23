@@ -70,7 +70,6 @@ export default function DishManagementPage() {
   useEffect(() => {
     dispatch(getAllCategories());
     dispatch(getAllDish());
-    //listBrands = useSelector((state) => state.brand);
   }, []);
 
   // dialog
@@ -96,26 +95,51 @@ export default function DishManagementPage() {
       chips.filter((chip) => chip.productId !== chipToDelete.productId)
     );
   };
-  const handleChangeCate = async (event) => {
+  const handleChangeCate = async (e, index) => {
     //console.log(event.target.value);
-    const res = await api.getAllProductByCategory(event.target.value);
+    const res = await api.getAllProductByCategory(e.target.value);
     //console.log(res.data);
-    setChipData(res.data);
+    const list = [...addDishDetails];
+    list[index].category = e.target.value;
+    list[index].productsToSelect = res.data.map((p) => {
+      return { id: p.productId, name: p.productName };
+    });
+    setAddDishDetails(list);
   };
 
-  const [chipData, setChipData] = React.useState([]);
+  //const [chipData, setChipData] = React.useState([]);
 
   const [chipDataSelect, setChipDataSelect] = React.useState([]);
   const [products, setProducts] = React.useState([
     { productName: "", unitName: "", quantity: 0 },
   ]);
+  const [addDishDetails, setAddDishDetails] = React.useState([
+    {
+      category: 0,
+      productsToSelect: [{ id: "", name: "" }],
+      products: [{ id: "", name: "" }],
+      productName: "",
+      unitName: "",
+      quantity: "",
+    },
+  ]);
   const handleAdd = () => {
-    setProducts([...products, { productName: "", unitName: "", quantity: 0 }]);
+    setAddDishDetails([
+      ...addDishDetails,
+      {
+        category: 0,
+        productsToSelect: [{ id: "", name: "" }],
+        products: [{ id: "", name: "" }],
+        productName: "",
+        unitName: "",
+        quantity: "",
+      },
+    ]);
   };
   const handleRemove = (index) => {
-    const list = [...products];
+    const list = [...addDishDetails];
     list.splice(index, 1);
-    setProducts(list);
+    setAddDishDetails(list);
   };
   const handleProductChange = (e, index) => {
     const { name, value } = e.target;
@@ -123,12 +147,11 @@ export default function DishManagementPage() {
     list[index][name] = value;
     setProducts(list);
   };
-  const handleClick = (e, data) => {
-    !chipDataSelect.some((pro) => pro.productId === data.productId) &&
-      setChipDataSelect((prev) => [
-        ...prev,
-        { productName: data.productName, productId: data.productId },
-      ]);
+  const handleClick = (data, index) => {
+    const list = [...addDishDetails];
+    !list[index].products.some((pro) => pro.id === data.id) &&
+      list[index].products.push(data);
+    setAddDishDetails(list);
   };
 
   return (
@@ -216,162 +239,165 @@ export default function DishManagementPage() {
                 </div>
               </Box>
 
-              <Box
-                component="form"
-                sx={{
-                  "& .MuiTextField-root": { m: 1 },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <h4>
-                  <b>Nguyên liệu nấu ăn</b>
-                </h4>
-                <div>
-                  {/* chon category */}
-                  <TextField
-                    fullWidth
-                    id="outlined-select-currency"
-                    select
-                    label="Nguyên liệu"
-                    onChange={handleChangeCate}
-                    value={0}
+              {addDishDetails.map((dish, index) => (
+                <div key={index}>
+                  <Box
+                    component="form"
+                    sx={{
+                      "& .MuiTextField-root": { m: 1 },
+                    }}
+                    noValidate
+                    autoComplete="off"
                   >
-                    {categories.map((option) => (
-                      <MenuItem
-                        key={option.categoryId}
-                        value={option.categoryId}
-                      >
-                        {option.categoryName}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-
-                  <Box sx={{ m: 2 }}>
+                    <h4>
+                      <b>Nguyên liệu nấu ăn</b>
+                    </h4>
                     <div>
-                      <Paper
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          flexWrap: "wrap",
-                          listStyle: "none",
-                          p: 0.5,
-                          m: 1,
-                        }}
-                        component="ul"
-                        elevation={0}
+                      {/* chon category */}
+                      <TextField
+                        fullWidth
+                        id="outlined-select-currency"
+                        select
+                        label="Nguyên liệu"
+                        onChange={(e) => handleChangeCate(e, index)}
+                        value={dish.category}
                       >
-                        {chipData.map((data) => {
-                          return (
-                            <ListItem key={data.productId}>
-                              <Chip
-                                label={data.productName}
-                                onClick={(e) => handleClick(e, data)}
-                              />
-                            </ListItem>
-                          );
-                        })}
-                      </Paper>
-                    </div>
-                    <div>
-                      <Paper
-                        sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          flexWrap: "wrap",
-                          listStyle: "none",
-                          p: 0.5,
-                          m: 1,
-                        }}
-                        component="ul"
-                        variant="outlined"
-                      >
-                        {chipDataSelect.map((data) => {
-                          let icon;
+                        {categories.map((option) => (
+                          <MenuItem
+                            key={option.categoryId}
+                            value={option.categoryId}
+                          >
+                            {option.categoryName}
+                          </MenuItem>
+                        ))}
+                      </TextField>
 
-                          return (
-                            <ListItem key={data.productId}>
-                              <Chip
-                                icon={icon}
-                                label={data.productName}
-                                onDelete={
-                                  data.productName === "React"
-                                    ? undefined
-                                    : handleDelete(data)
-                                }
-                              />
-                            </ListItem>
-                          );
-                        })}
-                      </Paper>
+                      <Box sx={{ m: 2 }}>
+                        <div>
+                          <Paper
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              flexWrap: "wrap",
+                              listStyle: "none",
+                              p: 0.5,
+                              m: 1,
+                            }}
+                            component="ul"
+                            elevation={0}
+                          >
+                            {dish.productsToSelect.map((data) => {
+                              return (
+                                <ListItem key={data.id}>
+                                  <Chip
+                                    label={data.name}
+                                    onClick={() => handleClick(data, index)}
+                                  />
+                                </ListItem>
+                              );
+                            })}
+                          </Paper>
+                        </div>
+                        <div>
+                          <Paper
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              flexWrap: "wrap",
+                              listStyle: "none",
+                              p: 0.5,
+                              m: 1,
+                            }}
+                            component="ul"
+                            variant="outlined"
+                          >
+                            {dish.products.map((data) => {
+                              let icon;
+                              return (
+                                <ListItem key={data.id}>
+                                  <Chip
+                                    icon={icon}
+                                    label={data.name}
+                                    onDelete={
+                                      data.name === "React"
+                                        ? undefined
+                                        : handleDelete(data)
+                                    }
+                                  />
+                                </ListItem>
+                              );
+                            })}
+                          </Paper>
+                        </div>
+                      </Box>
                     </div>
                   </Box>
-                </div>
-              </Box>
 
-              <Box
-                component="form"
-                sx={{
-                  "& .MuiTextField-root": { m: 1 },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                {products.map((pro, index) => (
-                  <div key={index}>
-                    <div>
-                      <TextField
-                        fullWidth
-                        margin="dense"
-                        id="productName"
-                        label="Tên sản phẩm"
-                        type="text"
-                        name="productName"
-                        variant="outlined"
-                        value={pro.productName}
-                        onChange={(e) => handleProductChange(e, index)}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        margin="dense"
-                        id="quantity"
-                        label="Số lượng"
-                        type="text"
-                        name="quantity"
-                        variant="outlined"
-                        value={pro.quantity}
-                        onChange={(e) => handleProductChange(e, index)}
-                      />
-                    </div>
-                    <div>
-                      <TextField
-                        fullWidth
-                        margin="dense"
-                        id="unitName"
-                        label="Tên đơn vị"
-                        type="text"
-                        name="unitName"
-                        variant="outlined"
-                        value={pro.unitName}
-                        onChange={(e) => handleProductChange(e, index)}
-                      />
-                    </div>
-                    <Button
-                      startIcon={<AddCircleIcon />}
-                      onClick={() => handleRemove(index)}
-                    >
-                      Xóa nguyên liệu
-                    </Button>
-                  </div>
-                ))}
-                <div>
-                  <Button startIcon={<AddCircleIcon />} onClick={handleAdd}>
-                    Thêm nguyên liệu
-                  </Button>
+                  <Box
+                    component="form"
+                    sx={{
+                      "& .MuiTextField-root": { m: 1 },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    {products.map((pro, index) => (
+                      <div key={index}>
+                        <div>
+                          <TextField
+                            fullWidth
+                            margin="dense"
+                            id="productName"
+                            label="Tên sản phẩm"
+                            type="text"
+                            name="productName"
+                            variant="outlined"
+                            value={pro.productName}
+                            onChange={(e) => handleProductChange(e, index)}
+                          />
+                        </div>
+                        <div>
+                          <TextField
+                            fullWidth
+                            margin="dense"
+                            id="quantity"
+                            label="Số lượng"
+                            type="text"
+                            name="quantity"
+                            variant="outlined"
+                            value={pro.quantity}
+                            onChange={(e) => handleProductChange(e, index)}
+                          />
+                        </div>
+                        <div>
+                          <TextField
+                            fullWidth
+                            margin="dense"
+                            id="unitName"
+                            label="Tên đơn vị"
+                            type="text"
+                            name="unitName"
+                            variant="outlined"
+                            value={pro.unitName}
+                            onChange={(e) => handleProductChange(e, index)}
+                          />
+                        </div>
+                        <Button
+                          startIcon={<AddCircleIcon />}
+                          onClick={() => handleRemove(index)}
+                        >
+                          Xóa nguyên liệu
+                        </Button>
+                      </div>
+                    ))}
+                  </Box>
                 </div>
-              </Box>
+              ))}
+              <div>
+                <Button startIcon={<AddCircleIcon />} onClick={handleAdd}>
+                  Thêm nguyên liệu
+                </Button>
+              </div>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Hủy</Button>
