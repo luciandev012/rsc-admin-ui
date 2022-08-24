@@ -52,12 +52,12 @@ export default function DishManagementPage() {
       dishName: data.dishName,
       dishDescription: data.description,
       dishCooking: data.dishCooking,
-      addDishDetails: products.map((pro) => {
+      addDishDetails: addDishDetails.map((dish) => {
         return {
-          productId: chipDataSelect.map((chip) => chip.productId),
-          quantity: pro.quantity,
-          unitName: pro.unitName,
-          productName: pro.productName,
+          productId: dish.products.map((pro) => pro.id),
+          quantity: dish.quantity,
+          productName: dish.productName,
+          unitName: dish.unitName,
         };
       }),
     };
@@ -86,14 +86,15 @@ export default function DishManagementPage() {
     resetField("dishName");
     resetField("description");
     resetField("dishCooking");
-    setProducts([{ productName: "", unitName: "", quantity: 0 }]);
     setOpen(false);
   };
 
-  const handleDelete = (chipToDelete) => () => {
-    setChipDataSelect((chips) =>
-      chips.filter((chip) => chip.productId !== chipToDelete.productId)
+  const handleDelete = (data, index) => () => {
+    const list = [...addDishDetails];
+    list[index].products = list[index].products.filter(
+      (pro) => pro.id !== data.id
     );
+    setAddDishDetails(list);
   };
   const handleChangeCate = async (e, index) => {
     //console.log(event.target.value);
@@ -108,16 +109,11 @@ export default function DishManagementPage() {
   };
 
   //const [chipData, setChipData] = React.useState([]);
-
-  const [chipDataSelect, setChipDataSelect] = React.useState([]);
-  const [products, setProducts] = React.useState([
-    { productName: "", unitName: "", quantity: 0 },
-  ]);
   const [addDishDetails, setAddDishDetails] = React.useState([
     {
       category: 0,
-      productsToSelect: [{ id: "", name: "" }],
-      products: [{ id: "", name: "" }],
+      productsToSelect: [],
+      products: [],
       productName: "",
       unitName: "",
       quantity: "",
@@ -128,8 +124,8 @@ export default function DishManagementPage() {
       ...addDishDetails,
       {
         category: 0,
-        productsToSelect: [{ id: "", name: "" }],
-        products: [{ id: "", name: "" }],
+        productsToSelect: [],
+        products: [],
         productName: "",
         unitName: "",
         quantity: "",
@@ -143,9 +139,9 @@ export default function DishManagementPage() {
   };
   const handleProductChange = (e, index) => {
     const { name, value } = e.target;
-    const list = [...products];
+    const list = [...addDishDetails];
     list[index][name] = value;
-    setProducts(list);
+    setAddDishDetails(list);
   };
   const handleClick = (data, index) => {
     const list = [...addDishDetails];
@@ -321,7 +317,7 @@ export default function DishManagementPage() {
                                     onDelete={
                                       data.name === "React"
                                         ? undefined
-                                        : handleDelete(data)
+                                        : handleDelete(data, index)
                                     }
                                   />
                                 </ListItem>
@@ -341,55 +337,51 @@ export default function DishManagementPage() {
                     noValidate
                     autoComplete="off"
                   >
-                    {products.map((pro, index) => (
-                      <div key={index}>
-                        <div>
-                          <TextField
-                            fullWidth
-                            margin="dense"
-                            id="productName"
-                            label="Tên sản phẩm"
-                            type="text"
-                            name="productName"
-                            variant="outlined"
-                            value={pro.productName}
-                            onChange={(e) => handleProductChange(e, index)}
-                          />
-                        </div>
-                        <div>
-                          <TextField
-                            fullWidth
-                            margin="dense"
-                            id="quantity"
-                            label="Số lượng"
-                            type="text"
-                            name="quantity"
-                            variant="outlined"
-                            value={pro.quantity}
-                            onChange={(e) => handleProductChange(e, index)}
-                          />
-                        </div>
-                        <div>
-                          <TextField
-                            fullWidth
-                            margin="dense"
-                            id="unitName"
-                            label="Tên đơn vị"
-                            type="text"
-                            name="unitName"
-                            variant="outlined"
-                            value={pro.unitName}
-                            onChange={(e) => handleProductChange(e, index)}
-                          />
-                        </div>
-                        <Button
-                          startIcon={<AddCircleIcon />}
-                          onClick={() => handleRemove(index)}
-                        >
-                          Xóa nguyên liệu
-                        </Button>
-                      </div>
-                    ))}
+                    <Button
+                      startIcon={<AddCircleIcon />}
+                      onClick={() => handleRemove(index)}
+                    >
+                      Xóa nguyên liệu
+                    </Button>
+                    <div>
+                      <TextField
+                        fullWidth
+                        margin="dense"
+                        id="productName"
+                        label="Tên sản phẩm"
+                        type="text"
+                        name="productName"
+                        variant="outlined"
+                        value={dish.productName}
+                        onChange={(e) => handleProductChange(e, index)}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        margin="dense"
+                        id="quantity"
+                        label="Số lượng"
+                        type="text"
+                        name="quantity"
+                        variant="outlined"
+                        value={dish.quantity}
+                        onChange={(e) => handleProductChange(e, index)}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        margin="dense"
+                        id="unitName"
+                        label="Tên đơn vị"
+                        type="text"
+                        name="unitName"
+                        variant="outlined"
+                        value={dish.unitName}
+                        onChange={(e) => handleProductChange(e, index)}
+                      />
+                    </div>
                   </Box>
                 </div>
               ))}
