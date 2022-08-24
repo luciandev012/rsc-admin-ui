@@ -14,7 +14,7 @@ import TableCell from "@material-ui/core/TableCell";
 // import Close from "@material-ui/icons/Close";
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
-import { TableDeleteButton, TableEditButton } from "./table-actions";
+import { TableDeleteButton, TableEditButton } from "./table-action";
 import Stack from "@mui/material/Stack";
 
 const useStyles = makeStyles(styles);
