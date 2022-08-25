@@ -97,9 +97,7 @@ export default function DishManagementPage() {
     setAddDishDetails(list);
   };
   const handleChangeCate = async (e, index) => {
-    //console.log(event.target.value);
     const res = await api.getAllProductByCategory(e.target.value);
-    //console.log(res.data);
     const list = [...addDishDetails];
     list[index].category = e.target.value;
     list[index].productsToSelect = res.data.map((p) => {
