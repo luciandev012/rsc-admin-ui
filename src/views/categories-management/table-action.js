@@ -96,29 +96,31 @@ export function TableEditButton({ data }) {
             <Button onClick={handleAdd} type="button">
               Add sub category
             </Button>
-            {subCateList.map((subc, index) => (
-              <>
-                <TextField
-                  key={index}
-                  margin="dense"
-                  id="subCate"
-                  label="Sub categories"
-                  type="text"
-                  fullWidth
-                  name="subCategoryName"
-                  // {...register("subCate", {
-                  //   required: "SubCategory name is required.",
-                  // })}
-                  // error={Boolean(errors.subCate)}
-                  // helperText={errors.subCate?.message}
-                  value={subc.subCategoryName}
-                  onChange={(e) => handleSubcateChange(e, index)}
-                />
-                <Button type="button" onClick={() => handleDelete(index)}>
-                  Remove
-                </Button>
-              </>
-            ))}
+            {subCateList
+              ? subCateList.map((subc, index) => (
+                  <>
+                    <TextField
+                      key={index}
+                      margin="dense"
+                      id="subCate"
+                      label="Sub categories"
+                      type="text"
+                      fullWidth
+                      name="subCategoryName"
+                      // {...register("subCate", {
+                      //   required: "SubCategory name is required.",
+                      // })}
+                      // error={Boolean(errors.subCate)}
+                      // helperText={errors.subCate?.message}
+                      value={subc.subCategoryName}
+                      onChange={(e) => handleSubcateChange(e, index)}
+                    />
+                    <Button type="button" onClick={() => handleDelete(index)}>
+                      Remove
+                    </Button>
+                  </>
+                ))
+              : null}
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>

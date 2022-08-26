@@ -20,7 +20,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { getAllCategories } from "actions/category";
+//import { getAllCategories } from "actions/category";
 //import { getAllProducts } from "actions/product";
 import * as api from "../../apis/product";
 import { updateDish } from "actions/dish";
@@ -44,10 +44,10 @@ export function TableEditButton({ data }) {
   const categories = useSelector((state) => state.category);
   //const products = useSelector((state) => state.product);
   const dispatch = useDispatch();
-  React.useEffect(() => {
-    dispatch(getAllCategories());
-    //dispatch(getAllProducts());
-  }, []);
+  //React.useEffect(() => {
+  //dispatch(getAllCategories());
+  //dispatch(getAllProducts());
+  //}, []);
   const listData = data.getAllDishDetails;
   const [dishDetails, setDishDetails] = React.useState(
     listData.map((ld) => {

@@ -93,15 +93,6 @@ export default function CategoriesManagementPage() {
     list[index][name] = value;
     setSubCateList(list);
   };
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setCate((prevValue) => {
-  //     return {
-  //       ...prevValue,
-  //       [name]: value,
-  //     };
-  //   });
-  // };
   useEffect(() => {
     dispatch(getAllCategories());
   }, []);
@@ -185,9 +176,13 @@ export default function CategoriesManagementPage() {
             <Table
               tableHeaderColor="primary"
               tableHead={["ID", "Category Name", "Actions"]}
-              tableData={cates.map((cate) => {
-                return [cate.categoryId, cate.categoryName];
-              })}
+              tableData={
+                cates
+                  ? cates.map((cate) => {
+                      return [cate.categoryId, cate.categoryName];
+                    })
+                  : null
+              }
               editData={cates}
             />
           </CardBody>
