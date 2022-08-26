@@ -56,7 +56,7 @@ export default function DishManagementPage() {
         return {
           productId: dish.products.map((pro) => pro.id),
           quantity: dish.quantity,
-          productName: dish.productName,
+          ingredient: dish.productName,
           unitName: dish.unitName,
         };
       }),
@@ -335,12 +335,6 @@ export default function DishManagementPage() {
                     noValidate
                     autoComplete="off"
                   >
-                    <Button
-                      startIcon={<AddCircleIcon />}
-                      onClick={() => handleRemove(index)}
-                    >
-                      Xóa nguyên liệu
-                    </Button>
                     <div>
                       <TextField
                         fullWidth
@@ -381,6 +375,12 @@ export default function DishManagementPage() {
                       />
                     </div>
                   </Box>
+                  <Button
+                    startIcon={<AddCircleIcon />}
+                    onClick={() => handleRemove(index)}
+                  >
+                    Xóa nguyên liệu
+                  </Button>
                 </div>
               ))}
               <div>

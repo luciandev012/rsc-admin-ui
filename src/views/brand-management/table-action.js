@@ -12,8 +12,6 @@ import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux/es/exports";
-import { updateBrand } from "actions/brand";
-import { deleteBrand } from "actions/brand";
 
 import { styled } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
@@ -23,8 +21,10 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { getAllCategories } from "actions/category";
-import { getAllProducts } from "actions/product";
+//import { getAllProducts } from "actions/product";
 import * as api from "../../apis/product";
+import { updateDish } from "actions/dish";
+import { deleteDish } from "actions/dish";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -36,47 +36,41 @@ export function TableEditButton({ data }) {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
   const categories = useSelector((state) => state.category);
-  const products = useSelector((state) => state.product);
+  //const products = useSelector((state) => state.product);
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(getAllCategories());
-    dispatch(getAllProducts());
+    //dispatch(getAllProducts());
   }, []);
-  // const findProd = (id) => {
-  //   let prod = products.find((p) => p.productId == id);
-  //   //console.log(prod);
-  //   if (prod) {
-  //     return prod.productName;
-  //   }
-  // };
   const listData = data.getAllDishDetails;
   const [dishDetails, setDishDetails] = React.useState(
     listData.map((ld) => {
-      // let prods = ld.productIdList.map((pld) => {
-      //   return { id: pld, name: findProd(pld) };
-      // });
-      // console.log(prods);
+      const lp = ld.productIdList
+        ? ld.productIdList.map((pid, index) => {
+            return { id: pid, name: ld.productName[index] };
+          })
+        : null;
       return {
         category: 0,
         productsToSelect: [],
-        products: ld.productIdList.map((pid) => {
-          const pName = products.find((p) => p.productId == pid);
-          const name = pName ? pName.productName : "";
-          return { id: ld, name: name };
-        }),
+        products: lp,
         quantity: ld.quantity,
         unitName: ld.unitName,
-        productName: ld.productName,
+        productName: ld.ingredient,
       };
     })
   );
   const handleClickOpenEdit = () => {
     categories.push({ categoryId: 0, categoryName: "Chọn nguyên liệu" });
+    setValue("dishName", data.dishName);
+    setValue("description", data.dishDescription);
+    setValue("dishCooking", data.dishCooking);
     setOpenDialogEdit(true);
   };
 
@@ -84,15 +78,23 @@ export function TableEditButton({ data }) {
     setOpenDialogEdit(false);
   };
 
-  const onSubmit = async () => {
-    let putData = {
-      brandId: data.brandId,
-      brandname: name,
+  const onSubmit = async (inData) => {
+    const inputData = {
+      dishId: data.dishId,
+      dishName: inData.dishName,
+      dishDescription: inData.description,
+      dishCooking: inData.dishCooking,
+      dishDetails: dishDetails.map((dish) => {
+        return {
+          productIdList: dish.products.map((pro) => pro.id),
+          quantity: dish.quantity,
+          ingredient: dish.productName,
+          unitName: dish.unitName,
+        };
+      }),
     };
-    console.log("putDATA", putData);
-    dispatch(updateBrand(putData));
+    dispatch(updateDish(inputData));
     handleCloseEdit();
-    //dispatch(getAllBrand());
   };
   const handleChangeCate = async (e, index) => {
     const res = await api.getAllProductByCategory(e.target.value);
@@ -103,8 +105,29 @@ export function TableEditButton({ data }) {
     });
     setDishDetails(list);
   };
-  const handleClick = () => {
-    console.info("You clicked the Chip.");
+  const handleDelete = (data, index) => () => {
+    const list = [...dishDetails];
+    list[index].products = list[index].products.filter(
+      (pro) => pro.id !== data.id
+    );
+    setDishDetails(list);
+  };
+  const handleRemove = (index) => {
+    const list = [...dishDetails];
+    list.splice(index, 1);
+    setDishDetails(list);
+  };
+  const handleClick = (data, index) => {
+    const list = [...dishDetails];
+    !list[index].products.some((pro) => pro.id === data.id) &&
+      list[index].products.push(data);
+    setDishDetails(list);
+  };
+  const handleProductChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...dishDetails];
+    list[index][name] = value;
+    setDishDetails(list);
   };
   const handleAdd = () => {
     setDishDetails([
@@ -157,7 +180,6 @@ export function TableEditButton({ data }) {
                   type="text"
                   name="dishName"
                   variant="outlined"
-                  value={data.dishName}
                   {...register("dishName", {
                     required: "Dish name is required.",
                   })}
@@ -175,7 +197,6 @@ export function TableEditButton({ data }) {
                   label="Mô tả"
                   type="text"
                   name="description"
-                  value={data.dishDescription}
                   variant="outlined"
                   {...register("description", {
                     required: "Description is required.",
@@ -194,7 +215,6 @@ export function TableEditButton({ data }) {
                   label="Cách nấu ăn"
                   type="text"
                   name="dishCooking"
-                  value={data.dishCooking}
                   variant="outlined"
                   {...register("dishCooking", {
                     required: "Dish cooking is required.",
@@ -284,11 +304,11 @@ export function TableEditButton({ data }) {
                                 <Chip
                                   icon={icon}
                                   label={data.name}
-                                  // onDelete={
-                                  //   data.name === "React"
-                                  //     ? undefined
-                                  //     : handleDelete(data, index)
-                                  // }
+                                  onDelete={
+                                    data.name === "React"
+                                      ? undefined
+                                      : handleDelete(data, index)
+                                  }
                                 />
                               </ListItem>
                             );
@@ -307,12 +327,6 @@ export function TableEditButton({ data }) {
                   noValidate
                   autoComplete="off"
                 >
-                  <Button
-                    startIcon={<AddCircleIcon />}
-                    //onClick={() => handleRemove(index)}
-                  >
-                    Xóa nguyên liệu
-                  </Button>
                   <div>
                     <TextField
                       fullWidth
@@ -323,7 +337,7 @@ export function TableEditButton({ data }) {
                       name="productName"
                       variant="outlined"
                       value={dish.productName}
-                      //onChange={(e) => handleProductChange(e, index)}
+                      onChange={(e) => handleProductChange(e, index)}
                     />
                   </div>
                   <div>
@@ -336,7 +350,7 @@ export function TableEditButton({ data }) {
                       name="quantity"
                       variant="outlined"
                       value={dish.quantity}
-                      //onChange={(e) => handleProductChange(e, index)}
+                      onChange={(e) => handleProductChange(e, index)}
                     />
                   </div>
                   <div>
@@ -349,10 +363,16 @@ export function TableEditButton({ data }) {
                       name="unitName"
                       variant="outlined"
                       value={dish.unitName}
-                      //onChange={(e) => handleProductChange(e, index)}
+                      onChange={(e) => handleProductChange(e, index)}
                     />
                   </div>
                 </Box>
+                <Button
+                  startIcon={<AddCircleIcon />}
+                  onClick={() => handleRemove(index)}
+                >
+                  Xóa nguyên liệu
+                </Button>
               </div>
             ))}
             <div>
@@ -384,11 +404,8 @@ export function TableDeleteButton({ data }) {
     setOpenDialogDelete(false);
   };
   const handleYesDelete = async () => {
-    //let path = `https://localhost:5001/api/v1/Product/DeleteBrand?id=${data.brandId}`;
-    //await axios.delete(path);
-    dispatch(deleteBrand(data.brandId));
+    dispatch(deleteDish(data.dishId));
     setOpenDialogDelete(false);
-    //window.location.reload();
   };
   const dispatch = useDispatch();
   return (
@@ -413,7 +430,7 @@ export function TableDeleteButton({ data }) {
         <DialogTitle id="alert-dialog-title">{"Xóa"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Bạn có muốn xóa món ăn không?
+            Bạn có muốn xóa món không?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
